@@ -32,16 +32,7 @@ public class CursorSkill : SlimeSkill
                 _returning = true;
         }
 
-        if (_returning)
-        {
-            if (mono.Pool.IsMerging)
-            {
-                IsComplete = true;
-                return;
-            }
-
-            ReturnToLargest(mono);
-        }
+      
     }
 
     void ReturnToLargest(SlimeMono mono)

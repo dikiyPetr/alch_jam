@@ -58,8 +58,6 @@ public class SlimeMono : UnitMono
     {
         if (slime.CurrentState == Slime.State.Dead)
             Destroy(gameObject);
-        else if (slime.CurrentState == Slime.State.Merging)
-            ActivateSkill(new MergeSkill());
     }
 
     // --- Сплит (вызывается из SlimePoolMono) ---

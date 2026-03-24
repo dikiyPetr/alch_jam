@@ -58,6 +58,7 @@ public class SlimePoolMono : MonoBehaviour, InputSystem_Actions.IPlayerActions
                 controlled = mono;
             }
         }
+
         return controlled;
     }
 
@@ -74,6 +75,7 @@ public class SlimePoolMono : MonoBehaviour, InputSystem_Actions.IPlayerActions
                 largest = mono;
             }
         }
+
         return largest;
     }
 
@@ -91,6 +93,7 @@ public class SlimePoolMono : MonoBehaviour, InputSystem_Actions.IPlayerActions
                 nearest = mono;
             }
         }
+
         return nearest;
     }
 
@@ -108,19 +111,45 @@ public class SlimePoolMono : MonoBehaviour, InputSystem_Actions.IPlayerActions
     public void OnMove(InputAction.CallbackContext ctx)
         => MoveInput = ctx.ReadValue<Vector2>();
 
-    public void OnAttack(InputAction.CallbackContext ctx) { }
-    public void OnJump(InputAction.CallbackContext ctx) { }
-    public void OnInteract(InputAction.CallbackContext ctx) { }
-    public void OnLook(InputAction.CallbackContext ctx) { }
-    public void OnCrouch(InputAction.CallbackContext ctx) { }
-    public void OnPrevious(InputAction.CallbackContext ctx) { }
-    public void OnNext(InputAction.CallbackContext ctx) { }
-    public void OnSprint(InputAction.CallbackContext ctx) { }
+    public void OnAttack(InputAction.CallbackContext ctx)
+    {
+    }
+
+    public void OnJump(InputAction.CallbackContext ctx)
+    {
+    }
+
+    public void OnInteract(InputAction.CallbackContext ctx)
+    {
+    }
+
+    public void OnLook(InputAction.CallbackContext ctx)
+    {
+    }
+
+    public void OnCrouch(InputAction.CallbackContext ctx)
+    {
+    }
+
+    public void OnPrevious(InputAction.CallbackContext ctx)
+    {
+    }
+
+    public void OnNext(InputAction.CallbackContext ctx)
+    {
+    }
+
+    public void OnSprint(InputAction.CallbackContext ctx)
+    {
+    }
 
     public void OnSkill_Merge(InputAction.CallbackContext ctx)
     {
         if (!ctx.started) return;
-        Pool.StartMerge();
+        var controlled = GetControlledSlime();
+        foreach (var mono in new List<SlimeMono>(_activeMono))
+            if (mono != controlled)
+                mono.ActivateSkill(new MergeSkill());
     }
 
     public void OnSkill_Following(InputAction.CallbackContext ctx)

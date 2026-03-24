@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class Slime
 {
-    public enum State { Autonomous, Merging, Dead }
+    public enum State { Autonomous, Dead }
 
     public SlimePool Pool { get; }      
     [field: SerializeField] public float ContainedMaxHp { get; private set; }
