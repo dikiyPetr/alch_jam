@@ -19,7 +19,7 @@ public class CursorSkill : SlimeSkill
     {
         _cursorTarget = CursorWorldPosition.Instance.Position;
         // TODO: зарефакторить вызов перемещения
-        // unit.ApplyMovement(_cursorTarget, GetMoveSpeed(unit));
+        // aiController.ApplyMovement(_cursorTarget, GetMoveSpeed(aiController));
     }
 
     public override void Update(SlimeMono unit, float dt)

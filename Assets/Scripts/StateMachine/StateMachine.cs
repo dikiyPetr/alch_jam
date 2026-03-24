@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class StateMachine
 {
   private Dictionary<Type, State> states = new Dictionary<Type, State>();
-  private State currentState;
+  private State _currentState;
 
   public T GetState<T>() where T : State
   {
@@ -32,13 +33,13 @@ public class StateMachine
       return;
     }
 
-    currentState?.Exit();
-    currentState = states[type];
-    currentState.Enter();
+    _currentState?.Exit();
+    _currentState = states[type];
+    _currentState.Enter();
   }
 
   public void Update()
   {
-    currentState?.Update();
+    _currentState?.Update();
   }
 }
