@@ -141,7 +141,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""f1ba0d36-48eb-4cd5-b651-1c94a6531f70"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -169,6 +169,33 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""type"": ""Button"",
                     ""id"": ""641cd816-40e6-41b4-8c3d-04687c349290"",
                     ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Skill_Merge"",
+                    ""type"": ""Button"",
+                    ""id"": ""bcb1c6b5-7190-4f35-a092-ad1f1e7fb958"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Skill_Following"",
+                    ""type"": ""Button"",
+                    ""id"": ""7300ca1c-8c08-40ee-baff-65daeee9bbb0"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Skill_Split"",
+                    ""type"": ""Button"",
+                    ""id"": ""60036286-6306-46a4-a305-5fb016a61b84"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -557,6 +584,39 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2932f732-7808-4560-8ad1-4b0d89752d60"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Skill_Merge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d1bec933-acc7-4e6c-97f7-13183b48cbea"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Skill_Following"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cc473cc8-db56-4815-b04a-825153ba3e4c"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Skill_Split"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1153,6 +1213,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Previous = m_Player.FindAction("Previous", throwIfNotFound: true);
         m_Player_Next = m_Player.FindAction("Next", throwIfNotFound: true);
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
+        m_Player_Skill_Merge = m_Player.FindAction("Skill_Merge", throwIfNotFound: true);
+        m_Player_Skill_Following = m_Player.FindAction("Skill_Following", throwIfNotFound: true);
+        m_Player_Skill_Split = m_Player.FindAction("Skill_Split", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1255,6 +1318,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Previous;
     private readonly InputAction m_Player_Next;
     private readonly InputAction m_Player_Sprint;
+    private readonly InputAction m_Player_Skill_Merge;
+    private readonly InputAction m_Player_Skill_Following;
+    private readonly InputAction m_Player_Skill_Split;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1302,6 +1368,18 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Sprint".
         /// </summary>
         public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Skill_Merge".
+        /// </summary>
+        public InputAction @Skill_Merge => m_Wrapper.m_Player_Skill_Merge;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Skill_Following".
+        /// </summary>
+        public InputAction @Skill_Following => m_Wrapper.m_Player_Skill_Following;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Skill_Split".
+        /// </summary>
+        public InputAction @Skill_Split => m_Wrapper.m_Player_Skill_Split;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1355,6 +1433,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Sprint.started += instance.OnSprint;
             @Sprint.performed += instance.OnSprint;
             @Sprint.canceled += instance.OnSprint;
+            @Skill_Merge.started += instance.OnSkill_Merge;
+            @Skill_Merge.performed += instance.OnSkill_Merge;
+            @Skill_Merge.canceled += instance.OnSkill_Merge;
+            @Skill_Following.started += instance.OnSkill_Following;
+            @Skill_Following.performed += instance.OnSkill_Following;
+            @Skill_Following.canceled += instance.OnSkill_Following;
+            @Skill_Split.started += instance.OnSkill_Split;
+            @Skill_Split.performed += instance.OnSkill_Split;
+            @Skill_Split.canceled += instance.OnSkill_Split;
         }
 
         /// <summary>
@@ -1393,6 +1480,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Sprint.started -= instance.OnSprint;
             @Sprint.performed -= instance.OnSprint;
             @Sprint.canceled -= instance.OnSprint;
+            @Skill_Merge.started -= instance.OnSkill_Merge;
+            @Skill_Merge.performed -= instance.OnSkill_Merge;
+            @Skill_Merge.canceled -= instance.OnSkill_Merge;
+            @Skill_Following.started -= instance.OnSkill_Following;
+            @Skill_Following.performed -= instance.OnSkill_Following;
+            @Skill_Following.canceled -= instance.OnSkill_Following;
+            @Skill_Split.started -= instance.OnSkill_Split;
+            @Skill_Split.performed -= instance.OnSkill_Split;
+            @Skill_Split.canceled -= instance.OnSkill_Split;
         }
 
         /// <summary>
@@ -1756,6 +1852,27 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnSprint(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Skill_Merge" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSkill_Merge(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Skill_Following" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSkill_Following(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Skill_Split" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSkill_Split(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

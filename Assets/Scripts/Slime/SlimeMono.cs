@@ -1,21 +1,18 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(Rigidbody))]
-public class SlimeMono : MonoBehaviour, InputSystem_Actions.IPlayerActions
+public class SlimeMono : UnitMono
 {
     [SerializeField] SlimeMono slimePrefab;
 
     [SerializeField] Slime _data;
-    Rigidbody _rb;
-    InputSystem_Actions _actions;
-    Vector2 _moveInput;
-    SlimeSkill _activeSkill;
-    public Vector3 MoveTarget { get; set; }
 
     public SlimePool Pool => SlimePoolMono.Instance.Pool;
-
     public Slime Data => _data;
+
+    SlimeSkill _activeSkill;
+    public bool HasActiveSkill => _activeSkill != null;
+
+    protected override float MoveSpeed => Pool.MoveSpeed;
 
     public void Initialize(Slime data)
     {
@@ -24,23 +21,8 @@ public class SlimeMono : MonoBehaviour, InputSystem_Actions.IPlayerActions
         _data.OnDied += _ => Destroy(gameObject);
     }
 
-    void Awake()
-    {
-        _rb = GetComponent<Rigidbody>();
-        _actions = new InputSystem_Actions();
-        _actions.Player.AddCallbacks(this);
-
-        int slimeLayer = LayerMask.NameToLayer("Slime");
-        if (slimeLayer != -1)
-            gameObject.layer = slimeLayer;
-    }
-
-    void OnEnable() => _actions.Player.Enable();
-    void OnDisable() => _actions.Player.Disable();
-
     void OnDestroy()
     {
-        _actions.Dispose();
         if (SlimePoolMono.Instance != null)
             SlimePoolMono.Instance.UnregisterMono(this);
     }
@@ -49,68 +31,48 @@ public class SlimeMono : MonoBehaviour, InputSystem_Actions.IPlayerActions
     {
         if (_data == null || _data.CurrentState == Slime.State.Dead) return;
 
-        if (_activeSkill != null)
+        if (UpdateSkill(Time.deltaTime))
         {
-            _activeSkill.Update(this, Time.deltaTime);
-            if (_activeSkill.IsComplete)
-            {
-                _activeSkill.OnDeactivate(this);
-                _activeSkill = null;
-            }
             UpdateScale();
             return;
         }
 
-        switch (_data.CurrentState)
+        if (SlimePoolMono.Instance.GetControlledSlime() == this)
         {
-            case Slime.State.Autonomous:
-                if (_data.CanSplit)
-                    HandleMovement();
-                else
-                {
-                    StopMovement();
-                    // TODO: сценарий поведения малого слайма
-                }
-                break;
-            case Slime.State.Merging:
-                if (_data.CanSplit && IsLargestInPool())
-                    HandleMovement();
-                else
-                    MoveToMerge();
-                break;
+            var input = SlimePoolMono.Instance.MoveInput;
+            ApplyMovement(new Vector3(input.x, 0f, input.y).normalized);
         }
+        else
+            StopMovement();
 
         UpdateScale();
     }
 
-    void HandleMovement()
+    void UpdateScale()
     {
-        var dir = new Vector3(_moveInput.x, 0f, _moveInput.y).normalized;
-        SetVelocityXZ(dir * Pool.MoveSpeed);
+        float s = Pool.BaseUnitScale * Mathf.Sqrt(_data.ContainedUnitCount);
+        transform.localScale = Vector3.one * Mathf.Max(s, 0.1f);
     }
 
-    void StopMovement() => SetVelocityXZ(Vector3.zero);
-
-    void SetVelocityXZ(Vector3 horizontalVelocity)
-        => _rb.linearVelocity = new Vector3(horizontalVelocity.x, _rb.linearVelocity.y, horizontalVelocity.z);
-
-    public void ApplyMovement(Vector3 dir) => SetVelocityXZ(dir * Pool.MoveSpeed);
-
-    public void ActivateSkill(SlimeSkill skill)
+    void OnStateChanged(Slime slime)
     {
-        _activeSkill = skill;
-        skill.OnActivate(this);
+        if (slime.CurrentState == Slime.State.Dead)
+            Destroy(gameObject);
     }
 
-    void DoSplit()
+    // --- Сплит (вызывается из SlimePoolMono) ---
+
+    public void TriggerSplit()
     {
+        if (!_data.CanSplit) return;
         var split = _data.Split(1);
         foreach (var s in split)
             SpawnSplitSlime(s);
     }
 
-    void DoSkillSplit()
+    public void TriggerSkillSplit()
     {
+        if (!_data.CanSplit) return;
         var split = _data.Split(1);
         foreach (var s in split)
             SpawnSplitSlime(s).ActivateSkill(new CursorSkill(Pool.SkillDuration));
@@ -126,80 +88,23 @@ public class SlimeMono : MonoBehaviour, InputSystem_Actions.IPlayerActions
         return spawned;
     }
 
-    void MoveToMerge()
+    // --- Скиллы ---
+
+    public void ActivateSkill(SlimeSkill skill)
     {
-        if (_data.CurrentState == Slime.State.Dead) return;
+        _activeSkill = skill;
+        skill.OnActivate(this);
+    }
 
-        var nearest = SlimePoolMono.Instance.FindNearestTo(transform.position, this);
-        if (nearest == null) { StopMovement(); return; }
-
-        var midpoint = (transform.position + nearest.transform.position) * 0.5f;
-        var dir = (midpoint - transform.position);
-        dir.y = 0f;
-        SetVelocityXZ(dir.normalized * (Pool.MoveSpeed * Pool.MergeSpeedMultiplier));
-
-        if (Vector3.Distance(transform.position, nearest.transform.position) <= Pool.MergeRadius)
+    protected bool UpdateSkill(float dt)
+    {
+        if (_activeSkill == null) return false;
+        _activeSkill.Update(this, dt);
+        if (_activeSkill.IsComplete)
         {
-                _data.Absorb(nearest.Data);
+            _activeSkill.OnDeactivate(this);
+            _activeSkill = null;
         }
+        return true;
     }
-
-    void UpdateScale()
-    {
-        float s = Pool.BaseUnitScale * Mathf.Sqrt(_data.ContainedUnitCount);
-        transform.localScale = Vector3.one * Mathf.Max(s, 0.1f);
-    }
-
-    void OnDrawGizmos()
-    {
-        if (_activeSkill == null) return;
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawSphere(MoveTarget, 0.15f);
-        Gizmos.DrawLine(transform.position, MoveTarget);
-    }
-
-    void OnStateChanged(Slime slime)
-    {
-        if (slime.CurrentState == Slime.State.Dead)
-            Destroy(gameObject);
-    }
-
-    // --- IPlayerActions ---
-
-    bool IsPlayerControlled =>
-        _data != null &&
-        _data.CanSplit &&
-        (_data.CurrentState == Slime.State.Autonomous ||
-         (Pool.IsMerging && IsLargestInPool()));
-
-    bool IsLargestInPool()
-    {
-        var second = SlimePoolMono.Instance.FindLargestExcept(this);
-        if (second == null) return true;
-        return _data.ContainedMaxHp > second.Data.ContainedMaxHp ||
-               (Mathf.Approximately(_data.ContainedMaxHp, second.Data.ContainedMaxHp) &&
-                GetInstanceID() > second.GetInstanceID());
-    }
-
-    public void OnMove(InputAction.CallbackContext ctx)
-        => _moveInput = ctx.ReadValue<Vector2>();
-
-    public void OnAttack(InputAction.CallbackContext ctx)
-    {
-        if (!ctx.started || !IsPlayerControlled) return;
-        DoSplit();
-    }
-
-    public void OnInteract(InputAction.CallbackContext ctx) { }
-
-    public void OnLook(InputAction.CallbackContext ctx) { }
-    public void OnCrouch(InputAction.CallbackContext ctx) { }
-    public void OnJump(InputAction.CallbackContext ctx)
-    {
-        if (!ctx.started || !IsPlayerControlled) return;
-        DoSkillSplit();
-    }
-    public void OnPrevious(InputAction.CallbackContext ctx) { }
-    public void OnNext(InputAction.CallbackContext ctx) { }
-    public void OnSprint(InputAction.CallbackContext ctx) { }
 }

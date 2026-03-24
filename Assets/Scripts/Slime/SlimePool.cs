@@ -13,8 +13,6 @@ public class SlimePool
     public float MergeRadius => SlimeConfig.Instance.mergeRadius;
     public float SkillDuration => SlimeConfig.Instance.skillDuration;
 
-    [field: SerializeField] public bool IsMerging { get; private set; }
-
     private readonly List<Slime> _slimes = new();
     public IReadOnlyList<Slime> Slimes => _slimes;
 
@@ -26,14 +24,6 @@ public class SlimePool
 
     public Slime CreateSlime(float initialMaxHp) => new Slime(this, initialMaxHp);
 
-    // Запустить глобальный мерж всех слаймов
-    public void StartMerge()
-    {
-        if (_slimes.Count <= 1) return;
-        IsMerging = true;
-        foreach (var s in new List<Slime>(_slimes))
-            s.SetState(Slime.State.Merging);
-    }
 
     internal void Register(Slime slime)
     {
@@ -46,8 +36,6 @@ public class SlimePool
     {
         _slimes.Remove(slime);
         RefreshDebugStats();
-        if (IsMerging && _slimes.Count <= 1)
-            StopMerge();
     }
 
     private void RefreshDebugStats()
@@ -56,12 +44,5 @@ public class SlimePool
         foreach (var s in _slimes) total += s.ContainedMaxHp;
         _totalMaxHp = total;
         _totalUnitCount = (int)(total / HpPerUnit);
-    }
-
-    private void StopMerge()
-    {
-        IsMerging = false;
-        foreach (var s in _slimes)
-            s.SetState(Slime.State.Autonomous);
     }
 }
