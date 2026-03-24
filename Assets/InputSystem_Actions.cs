@@ -199,6 +199,24 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Skill_EvenSplit"",
+                    ""type"": ""Button"",
+                    ""id"": ""a1b2c3d4-e5f6-7890-abcd-ef1234567890"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Skill_MaxSplit"",
+                    ""type"": ""Button"",
+                    ""id"": ""b2c3d4e5-f6a7-8901-bcde-f01234567891"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -617,6 +635,28 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Skill_Split"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c3d4e5f6-a7b8-9012-cdef-012345678902"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Skill_EvenSplit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d4e5f6a7-b8c9-0123-defa-123456789013"",
+                    ""path"": ""<Keyboard>/5"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Skill_MaxSplit"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1216,6 +1256,8 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Skill_Merge = m_Player.FindAction("Skill_Merge", throwIfNotFound: true);
         m_Player_Skill_Following = m_Player.FindAction("Skill_Following", throwIfNotFound: true);
         m_Player_Skill_Split = m_Player.FindAction("Skill_Split", throwIfNotFound: true);
+        m_Player_Skill_EvenSplit = m_Player.FindAction("Skill_EvenSplit", throwIfNotFound: true);
+        m_Player_Skill_MaxSplit = m_Player.FindAction("Skill_MaxSplit", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1321,6 +1363,8 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Skill_Merge;
     private readonly InputAction m_Player_Skill_Following;
     private readonly InputAction m_Player_Skill_Split;
+    private readonly InputAction m_Player_Skill_EvenSplit;
+    private readonly InputAction m_Player_Skill_MaxSplit;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1380,6 +1424,14 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Skill_Split".
         /// </summary>
         public InputAction @Skill_Split => m_Wrapper.m_Player_Skill_Split;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Skill_EvenSplit".
+        /// </summary>
+        public InputAction @Skill_EvenSplit => m_Wrapper.m_Player_Skill_EvenSplit;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Skill_MaxSplit".
+        /// </summary>
+        public InputAction @Skill_MaxSplit => m_Wrapper.m_Player_Skill_MaxSplit;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1442,6 +1494,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Skill_Split.started += instance.OnSkill_Split;
             @Skill_Split.performed += instance.OnSkill_Split;
             @Skill_Split.canceled += instance.OnSkill_Split;
+            @Skill_EvenSplit.started += instance.OnSkill_EvenSplit;
+            @Skill_EvenSplit.performed += instance.OnSkill_EvenSplit;
+            @Skill_EvenSplit.canceled += instance.OnSkill_EvenSplit;
+            @Skill_MaxSplit.started += instance.OnSkill_MaxSplit;
+            @Skill_MaxSplit.performed += instance.OnSkill_MaxSplit;
+            @Skill_MaxSplit.canceled += instance.OnSkill_MaxSplit;
         }
 
         /// <summary>
@@ -1489,6 +1547,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Skill_Split.started -= instance.OnSkill_Split;
             @Skill_Split.performed -= instance.OnSkill_Split;
             @Skill_Split.canceled -= instance.OnSkill_Split;
+            @Skill_EvenSplit.started -= instance.OnSkill_EvenSplit;
+            @Skill_EvenSplit.performed -= instance.OnSkill_EvenSplit;
+            @Skill_EvenSplit.canceled -= instance.OnSkill_EvenSplit;
+            @Skill_MaxSplit.started -= instance.OnSkill_MaxSplit;
+            @Skill_MaxSplit.performed -= instance.OnSkill_MaxSplit;
+            @Skill_MaxSplit.canceled -= instance.OnSkill_MaxSplit;
         }
 
         /// <summary>
@@ -1873,6 +1937,20 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnSkill_Split(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Skill_EvenSplit" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSkill_EvenSplit(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Skill_MaxSplit" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSkill_MaxSplit(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

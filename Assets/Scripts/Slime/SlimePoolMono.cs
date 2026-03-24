@@ -41,25 +41,46 @@ public class SlimePoolMono : MonoBehaviour, InputSystem_Actions.IPlayerActions
 
     public void UnregisterMono(SlimeMono mono) => _activeMono.Remove(mono);
 
-    // Слайм под управлением — наибольший, который может делиться
-    public SlimeMono GetControlledSlime()
+    // Управляемые слаймы — все с максимальным округлённым HP среди тех, кто может делиться
+    public List<SlimeMono> GetControlledSlimes()
     {
-        SlimeMono controlled = null;
-        float maxHp = float.MinValue;
+        // Первый проход: ищем максимальное округлённое HP
+        int maxHp = int.MinValue;
         foreach (var mono in _activeMono)
         {
             if (mono == null || mono.Data == null) continue;
             if (!mono.Data.CanSplit) continue;
-            if (mono.Data.ContainedMaxHp > maxHp ||
-                (Mathf.Approximately(mono.Data.ContainedMaxHp, maxHp) &&
-                 controlled != null && mono.GetInstanceID() > controlled.GetInstanceID()))
-            {
-                maxHp = mono.Data.ContainedMaxHp;
-                controlled = mono;
-            }
+            int hp = Mathf.RoundToInt(mono.Data.ContainedMaxHp);
+            if (hp > maxHp) maxHp = hp;
         }
 
-        return controlled;
+        var result = new List<SlimeMono>();
+        if (maxHp == int.MinValue) return result;
+
+        // Второй проход: собираем всех слаймов с максимальным HP
+        foreach (var mono in _activeMono)
+        {
+            if (mono == null || mono.Data == null) continue;
+            if (!mono.Data.CanSplit) continue;
+            if (Mathf.RoundToInt(mono.Data.ContainedMaxHp) == maxHp)
+                result.Add(mono);
+        }
+
+        return result;
+    }
+
+    // Проверяет, входит ли слайм в группу управляемых (с максимальным округлённым HP)
+    public bool IsControlled(SlimeMono mono)
+    {
+        if (mono == null || mono.Data == null || !mono.Data.CanSplit) return false;
+        int monoHp = Mathf.RoundToInt(mono.Data.ContainedMaxHp);
+        // Если кто-то из активных имеет большее округлённое HP — этот слайм не управляемый
+        foreach (var m in _activeMono)
+        {
+            if (m == null || m.Data == null || !m.Data.CanSplit) continue;
+            if (Mathf.RoundToInt(m.Data.ContainedMaxHp) > monoHp) return false;
+        }
+        return true;
     }
 
     public SlimeMono FindLargestExcept(SlimeMono exclude)
@@ -114,7 +135,8 @@ public class SlimePoolMono : MonoBehaviour, InputSystem_Actions.IPlayerActions
     public void OnAttack(InputAction.CallbackContext ctx)
     {
         if (!ctx.started) return;
-        GetControlledSlime()?.TriggerProjectileSplit();
+        foreach (var mono in GetControlledSlimes())
+            mono.TriggerProjectileSplit();
     }
 
     public void OnJump(InputAction.CallbackContext ctx)
@@ -141,6 +163,22 @@ public class SlimePoolMono : MonoBehaviour, InputSystem_Actions.IPlayerActions
     {
     }
 
+    // Деление на два примерно равных слайма
+    public void OnSkill_EvenSplit(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.started) return;
+        foreach (var mono in GetControlledSlimes())
+            mono.TriggerEvenSplit();
+    }
+
+    // Деление на максимальное количество единичных слаймов
+    public void OnSkill_MaxSplit(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.started) return;
+        foreach (var mono in GetControlledSlimes())
+            mono.TriggerMaxSplit();
+    }
+
     public void OnSprint(InputAction.CallbackContext ctx)
     {
     }
@@ -148,21 +186,23 @@ public class SlimePoolMono : MonoBehaviour, InputSystem_Actions.IPlayerActions
     public void OnSkill_Merge(InputAction.CallbackContext ctx)
     {
         if (!ctx.started) return;
-        var controlled = GetControlledSlime();
+        // Все слаймы кроме управляемых сливаются
         foreach (var mono in new List<SlimeMono>(_activeMono))
-            if (mono != controlled)
+            if (!IsControlled(mono))
                 mono.ActivateSkill(new MergeSkill());
     }
 
     public void OnSkill_Following(InputAction.CallbackContext ctx)
     {
         if (!ctx.started) return;
-        GetControlledSlime()?.TriggerSkillSplit();
+        foreach (var mono in GetControlledSlimes())
+            mono.TriggerSkillSplit();
     }
 
     public void OnSkill_Split(InputAction.CallbackContext ctx)
     {
         if (!ctx.started) return;
-        GetControlledSlime()?.TriggerSplit();
+        foreach (var mono in GetControlledSlimes())
+            mono.TriggerSplit();
     }
 }

@@ -94,6 +94,15 @@ public abstract class UnitMono : MonoBehaviour
         if (moveMode == mode) return;
         moveMode = mode;
         _rb.isKinematic = mode == MoveMode.Controller;
+        // Синхронизируем CharacterController с текущей позицией Transform:
+        // пока Rigidbody симулировал физику, внутренняя позиция CC не обновлялась,
+        // и первый вызов Move() мог бы вернуть объект на старое место.
+        // Disable/enable заставляет CC пересчитать позицию из Transform.
+        if (mode == MoveMode.Controller && _controller != null)
+        {
+            _controller.enabled = false;
+            _controller.enabled = true;
+        }
     }
 
     protected void SetVelocityXZ(Vector3 v)

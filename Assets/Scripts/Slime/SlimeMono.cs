@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class SlimeMono : UnitMono
@@ -37,7 +38,7 @@ public class SlimeMono : UnitMono
             return;
         }
 
-        if (SlimePoolMono.Instance.GetControlledSlime() == this)
+        if (SlimePoolMono.Instance.IsControlled(this))
         {
             var input = SlimePoolMono.Instance.MoveInput;
             MoveAsController(new Vector3(input.x, 0f, input.y).normalized);
@@ -67,7 +68,33 @@ public class SlimeMono : UnitMono
         if (!_data.CanSplit) return;
         var split = _data.Split(1);
         foreach (var s in split)
-            SpawnSplitSlime(s);
+            KickSlime(SpawnSplitSlime(s));
+    }
+
+    // Делит слайм на два примерно равных, новый вылетает в случайную сторону
+    public void TriggerEvenSplit()
+    {
+        if (!_data.CanSplit) return;
+        KickSlime(SpawnSplitSlime(_data.SplitHalf()));
+    }
+
+    // Разбивает слайм на максимальное количество юнитов с задержкой между каждым
+    public void TriggerMaxSplit()
+    {
+        if (!_data.CanSplit) return;
+        StartCoroutine(MaxSplitCoroutine());
+    }
+
+    // Поочерёдно выбрасывает по одному юниту с интервалом MaxSplitInterval
+    private IEnumerator MaxSplitCoroutine()
+    {
+        var wait = new WaitForSeconds(Pool.MaxSplitInterval);
+        while (_data != null && _data.CanSplit)
+        {
+            var splits = _data.Split(1);
+            KickSlime(SpawnSplitSlime(splits[0]));
+            yield return wait;
+        }
     }
 
     public void TriggerSkillSplit()
@@ -93,12 +120,23 @@ public class SlimeMono : UnitMono
 
     SlimeMono SpawnSplitSlime(Slime data)
     {
-        var offset = Random.insideUnitCircle * Pool.SplitSpawnRadius;
+        // Небольшой случайный оффсет чтобы коллайдер нового слайма не перекрывался
+        // с родительским — это предотвращает нежелательный overlap resolution от физики
+        var offset = Random.insideUnitCircle * 0.1f;
         var pos = transform.position + new Vector3(offset.x, 0f, offset.y);
         var spawned = Instantiate(slimePrefab, pos, Quaternion.identity);
         SlimePoolMono.Instance.RegisterMono(spawned);
         spawned.Initialize(data);
         return spawned;
+    }
+
+    // Придаёт слайму случайный горизонтальный импульс и активирует KickSkill,
+    // чтобы StopMovement не гасил скорость до завершения полёта
+    private void KickSlime(SlimeMono mono)
+    {
+        var dir = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized;
+        mono.ApplyImpulse(dir * Pool.SplitImpulseSpeed);
+        mono.ActivateSkill(new KickSkill(Pool.SplitKickDuration));
     }
 
     // --- Скиллы ---

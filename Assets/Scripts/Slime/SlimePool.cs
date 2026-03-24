@@ -11,6 +11,9 @@ public class SlimePool
     public float BaseUnitScale => SlimeConfig.Instance.baseUnitScale;
     public float SplitSpawnRadius => SlimeConfig.Instance.splitSpawnRadius;
     public float MergeRadius => SlimeConfig.Instance.mergeRadius;
+    public float SplitImpulseSpeed => SlimeConfig.Instance.splitImpulseSpeed;
+    public float MaxSplitInterval => SlimeConfig.Instance.maxSplitInterval;
+    public float SplitKickDuration => SlimeConfig.Instance.splitKickDuration;
     public float SkillDuration => SlimeConfig.Instance.skillDuration;
     public float ProjectileSpeedMultiplier => SlimeConfig.Instance.projectileSpeedMultiplier;
     public float ProjectileReturnDelay     => SlimeConfig.Instance.projectileReturnDelay;
