@@ -4,7 +4,7 @@ public class MergeSkill : SlimeSkill
 {
     public override void Update(SlimeMono unit, float dt)
     {
-        if (SlimePoolMono.Instance.GetControlledSlime() == unit)
+        if (SlimePoolMono.Instance.IsControlled(unit))
         {
             IsComplete = true;
             return;

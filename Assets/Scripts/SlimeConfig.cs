@@ -22,6 +22,12 @@ public class SlimeConfig : ScriptableObject
     [Header("Деление / Слияние")]
     public float splitSpawnRadius = 1.5f;
     public float mergeRadius = 0.5f;
+    // Начальная скорость выброса при делении
+    public float splitImpulseSpeed = 3f;
+    // Задержка между выбросами юнитов при максимальном делении
+    public float maxSplitInterval = 0.12f;
+    // Сколько секунд слайм свободно летит после выброса (до перехода к обычной логике)
+    public float splitKickDuration = 0.4f;
 
     [Header("Скилл")]
     public float skillDuration = 2f;

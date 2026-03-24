@@ -29,6 +29,7 @@ public class Slime
 
     // --- Деление ---
 
+    // Отщепляет count единичных слаймов
     public Slime[] Split(int count = 1)
     {
         if (ContainedUnitCount <= count)
@@ -43,6 +44,32 @@ public class Slime
             result[i] = new Slime(Pool, Pool.HpPerUnit);
         }
         return result;
+    }
+
+    // Делит слайм пополам: нижняя половина (по юнитам) уходит в новый слайм
+    public Slime SplitHalf()
+    {
+        if (!CanSplit)
+            throw new InvalidOperationException("Need >1 unit to split in half.");
+
+        // Целочисленное деление — нечётный остаток остаётся у текущего слайма
+        int halfUnits = ContainedUnitCount / 2;
+        float halfHp = halfUnits * Pool.HpPerUnit;
+
+        ContainedMaxHp -= halfHp;
+        CurrentHp = Math.Min(CurrentHp, ContainedMaxHp);
+
+        return new Slime(Pool, halfHp);
+    }
+
+    // Разбивает слайм на максимальное количество единичных слаймов
+    public Slime[] SplitAll()
+    {
+        // Отщепляем все юниты кроме одного — оригинал остаётся размером HpPerUnit
+        int count = ContainedUnitCount - 1;
+        if (count <= 0)
+            throw new InvalidOperationException("Need >1 unit to split all.");
+        return Split(count);
     }
 
     // --- Слияние ---
