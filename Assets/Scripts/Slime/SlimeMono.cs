@@ -40,7 +40,7 @@ public class SlimeMono : UnitMono
         if (SlimePoolMono.Instance.GetControlledSlime() == this)
         {
             var input = SlimePoolMono.Instance.MoveInput;
-            ApplyMovement(new Vector3(input.x, 0f, input.y).normalized);
+            MoveAsController(new Vector3(input.x, 0f, input.y).normalized);
         }
         else
             StopMovement();

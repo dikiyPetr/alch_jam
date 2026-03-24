@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4125453442490017711}
   - component: {fileID: 8395580553798742644}
   - component: {fileID: 5559963261905643009}
+  - component: {fileID: 3666156465852616649}
   m_Layer: 6
   m_Name: Slime
   m_TagString: Untagged
@@ -48,6 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00d148ef9156d934db7dbc996aaaab40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlimeMono
+  moveMode: 0
   slimePrefab: {fileID: 4217987389504108782}
   _data:
     <ContainedMaxHp>k__BackingField: 0
@@ -62,7 +64,7 @@ Rigidbody:
   m_GameObject: {fileID: 2361065464670210776}
   serializedVersion: 5
   m_Mass: 1
-  m_LinearDamping: 100
+  m_LinearDamping: 0.1
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -121,10 +123,35 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 2
+  m_Height: 1
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!143 &3666156465852616649
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2361065464670210776}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 1
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2756706488806022571
 GameObject:
   m_ObjectHideFlags: 0

@@ -23,7 +23,7 @@ public class SlimePoolMono : MonoBehaviour, InputSystem_Actions.IPlayerActions
         Pool = new SlimePool();
         _actions = new InputSystem_Actions();
         _actions.Player.AddCallbacks(this);
-    }
+    }   
 
     void OnEnable() => _actions.Player.Enable();
     void OnDisable() => _actions.Player.Disable();

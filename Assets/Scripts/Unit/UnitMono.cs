@@ -4,7 +4,12 @@ using UnityEngine.AI;
 [RequireComponent(typeof(Rigidbody))]
 public abstract class UnitMono : MonoBehaviour
 {
-    public enum MoveMode { Physics, Navigation, Controller }
+    public enum MoveMode
+    {
+        Physics,
+        Navigation,
+        Controller
+    }
 
     protected Rigidbody _rb;
     protected NavMeshAgent _agent;
@@ -12,7 +17,6 @@ public abstract class UnitMono : MonoBehaviour
 
     [SerializeField] protected MoveMode moveMode;
 
-    public Vector3 MoveTarget { get; set; }
     protected abstract float MoveSpeed { get; }
 
     protected virtual void Awake()
@@ -31,7 +35,7 @@ public abstract class UnitMono : MonoBehaviour
     // --- Движение ---
 
     // Physics: прямое управление скоростью Rigidbody
-    public void MoveInDirection(Vector3 dir, float speed)
+    private void MoveInDirection(Vector3 dir, float speed)
     {
         SetMode(MoveMode.Physics);
         SetVelocityXZ(dir * speed);
@@ -41,7 +45,6 @@ public abstract class UnitMono : MonoBehaviour
     public void NavigateTo(Vector3 target, float speed)
     {
         SetMode(MoveMode.Navigation);
-        MoveTarget = new Vector3(target.x, transform.position.y, target.z);
         _agent.speed = speed;
         _agent.SetDestination(target);
         _agent.nextPosition = transform.position;
@@ -52,18 +55,22 @@ public abstract class UnitMono : MonoBehaviour
     public void MoveAsController(Vector3 motion)
     {
         SetMode(MoveMode.Controller);
-        _controller.Move(motion);
+        _controller.Move(motion * (MoveSpeed * Time.deltaTime));
     }
 
     public void ApplyMovement(Vector3 dir) => MoveInDirection(dir, MoveSpeed);
 
-    // Одноразовый импульс: задаёт скорость мгновенно, не переопределяя её каждый кадр
+    // Одноразовый импульс: переключает в Physics и задаёт скорость мгновенно
     public void ApplyImpulse(Vector3 impulse)
-        => _rb.AddForce(impulse, ForceMode.VelocityChange);
+    {
+        SetMode(MoveMode.Physics);
+        _rb.AddForce(impulse, ForceMode.VelocityChange);
+    }
 
     // Плавный разворот к желаемой скорости через lerp — даёт инерцию при навигации
     public void SteerTowards(Vector3 dir, float targetSpeed, float steeringSpeed, float dt)
     {
+        SetMode(MoveMode.Physics);
         var desired = new Vector3(dir.x, 0f, dir.z) * targetSpeed;
         var current = new Vector3(_rb.linearVelocity.x, 0f, _rb.linearVelocity.z);
         var newVelocity = Vector3.Lerp(current, desired, steeringSpeed * dt);
@@ -72,7 +79,7 @@ public abstract class UnitMono : MonoBehaviour
 
     // Управление линейным сопротивлением Rigidbody
     public void SetLinearDrag(float drag) => _rb.linearDamping = drag;
-    public float GetLinearDrag()          => _rb.linearDamping;
+    public float GetLinearDrag() => _rb.linearDamping;
 
     protected void StopMovement()
     {
@@ -91,13 +98,4 @@ public abstract class UnitMono : MonoBehaviour
 
     protected void SetVelocityXZ(Vector3 v)
         => _rb.linearVelocity = new Vector3(v.x, _rb.linearVelocity.y, v.z);
-
-    // --- Гизмо ---
-
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawSphere(MoveTarget, 0.15f);
-        Gizmos.DrawLine(transform.position, MoveTarget);
-    }
 }
