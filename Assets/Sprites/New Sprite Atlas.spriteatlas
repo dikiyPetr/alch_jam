@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: New Sprite Atlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 2800000, guid: e8707f6da5c148740b1f1d38be87337d, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+    packedSpriteRenderDataKeys:
+    - e8707f6da5c148740b1f1d38be87337d: 377761922
+    - e8707f6da5c148740b1f1d38be87337d: 1245110787
+    - e8707f6da5c148740b1f1d38be87337d: -536708118
+    - e8707f6da5c148740b1f1d38be87337d: -174683669
+    - e8707f6da5c148740b1f1d38be87337d: -2083143449
+    - e8707f6da5c148740b1f1d38be87337d: 362749328
+    - e8707f6da5c148740b1f1d38be87337d: -1443211199
+    - e8707f6da5c148740b1f1d38be87337d: -1191368942
+    - e8707f6da5c148740b1f1d38be87337d: 1567455532
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 377761922, guid: e8707f6da5c148740b1f1d38be87337d, type: 3}
+  - {fileID: 1245110787, guid: e8707f6da5c148740b1f1d38be87337d, type: 3}
+  - {fileID: -536708118, guid: e8707f6da5c148740b1f1d38be87337d, type: 3}
+  - {fileID: -174683669, guid: e8707f6da5c148740b1f1d38be87337d, type: 3}
+  - {fileID: -2083143449, guid: e8707f6da5c148740b1f1d38be87337d, type: 3}
+  - {fileID: 362749328, guid: e8707f6da5c148740b1f1d38be87337d, type: 3}
+  - {fileID: -1443211199, guid: e8707f6da5c148740b1f1d38be87337d, type: 3}
+  - {fileID: -1191368942, guid: e8707f6da5c148740b1f1d38be87337d, type: 3}
+  - {fileID: 1567455532, guid: e8707f6da5c148740b1f1d38be87337d, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - slime(1)-Sheet_8
+  - slime(1)-Sheet_6
+  - slime(1)-Sheet_7
+  - slime(1)-Sheet_4
+  - slime(1)-Sheet_5
+  - slime(1)-Sheet_2
+  - slime(1)-Sheet_3
+  - slime(1)-Sheet_0
+  - slime(1)-Sheet_1
+  m_RenderDataMap: {}
+  m_Tag: New Sprite Atlas
+  m_IsVariant: 0

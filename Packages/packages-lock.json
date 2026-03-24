@@ -11,6 +11,12 @@
       },
       "hash": "72c005fa0ae22e23c2b531fd0002fc2d472a919e"
     },
+    "com.unity.2d.sprite": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
     "com.unity.ai.navigation": {
       "version": "2.0.9",
       "depth": 0,
@@ -219,7 +225,7 @@
       "url": "https://packages.unity.com"
     },
     "jp.hadashikick.vcontainer": {
-      "version": "1.16.8",
+      "version": "1.17.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
