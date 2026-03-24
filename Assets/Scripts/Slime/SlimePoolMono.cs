@@ -113,6 +113,8 @@ public class SlimePoolMono : MonoBehaviour, InputSystem_Actions.IPlayerActions
 
     public void OnAttack(InputAction.CallbackContext ctx)
     {
+        if (!ctx.started) return;
+        GetControlledSlime()?.TriggerProjectileSplit();
     }
 
     public void OnJump(InputAction.CallbackContext ctx)

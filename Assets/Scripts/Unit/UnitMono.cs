@@ -25,6 +25,23 @@ public abstract class UnitMono : MonoBehaviour
 
     public void ApplyMovement(Vector3 dir) => MoveInDirection(dir, MoveSpeed);
 
+    // Одноразовый импульс: задаёт скорость мгновенно, не переопределяя её каждый кадр
+    public void ApplyImpulse(Vector3 impulse)
+        => _rb.AddForce(impulse, ForceMode.VelocityChange);
+
+    // Плавный разворот к желаемой скорости через lerp — даёт инерцию при навигации
+    public void SteerTowards(Vector3 dir, float targetSpeed, float steeringSpeed, float dt)
+    {
+        var desired = new Vector3(dir.x, 0f, dir.z) * targetSpeed;
+        var current = new Vector3(_rb.linearVelocity.x, 0f, _rb.linearVelocity.z);
+        var newVelocity = Vector3.Lerp(current, desired, steeringSpeed * dt);
+        SetVelocityXZ(newVelocity);
+    }
+
+    // Управление линейным сопротивлением Rigidbody
+    public void SetLinearDrag(float drag) => _rb.linearDamping = drag;
+    public float GetLinearDrag()          => _rb.linearDamping;
+
     protected void StopMovement()
     {
         SetVelocityXZ(Vector3.zero);

@@ -26,6 +26,12 @@ public class SlimeConfig : ScriptableObject
     [Header("Скилл")]
     public float skillDuration = 2f;
 
+    [Header("Проджектайл")]
+    public float projectileSpeedMultiplier = 3f;
+    public float projectileReturnDelay = 2f;
+    // Насколько быстро снаряд разворачивается к цели в фазе возврата (коэф. lerp в секунду)
+    public float projectileSteeringSpeed = 4f;
+
     [Header("Рейкаст")]
     public LayerMask groundLayer;
 }

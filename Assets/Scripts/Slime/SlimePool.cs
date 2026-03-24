@@ -12,6 +12,9 @@ public class SlimePool
     public float SplitSpawnRadius => SlimeConfig.Instance.splitSpawnRadius;
     public float MergeRadius => SlimeConfig.Instance.mergeRadius;
     public float SkillDuration => SlimeConfig.Instance.skillDuration;
+    public float ProjectileSpeedMultiplier => SlimeConfig.Instance.projectileSpeedMultiplier;
+    public float ProjectileReturnDelay     => SlimeConfig.Instance.projectileReturnDelay;
+    public float ProjectileSteeringSpeed   => SlimeConfig.Instance.projectileSteeringSpeed;
 
     private readonly List<Slime> _slimes = new();
     public IReadOnlyList<Slime> Slimes => _slimes;

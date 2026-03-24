@@ -78,6 +78,19 @@ public class SlimeMono : UnitMono
             SpawnSplitSlime(s).ActivateSkill(new CursorSkill(Pool.SkillDuration));
     }
 
+    public void TriggerProjectileSplit()
+    {
+        if (!_data.CanSplit) return;
+        // Фиксируем направление от слайма к курсору в момент клика
+        var dir = CursorWorldPosition.Instance.Position - transform.position;
+        dir.y = 0f;
+        dir.Normalize();
+        var split = _data.Split(1);
+        foreach (var s in split)
+            SpawnSplitSlime(s).ActivateSkill(
+                new ProjectileSkill(dir, Pool.ProjectileReturnDelay, Pool.ProjectileSpeedMultiplier));
+    }
+
     SlimeMono SpawnSplitSlime(Slime data)
     {
         var offset = Random.insideUnitCircle * Pool.SplitSpawnRadius;
