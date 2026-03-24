@@ -20,12 +20,22 @@ public class MergeSkill : SlimeSkill
         }
 
         var midpoint = (unit.transform.position + nearest.transform.position) * 0.5f;
-        var dir = (midpoint - unit.transform.position).normalized;
-        dir.y = 0f;
-        unit.MoveInDirection(dir, unit.Pool.MoveSpeed * unit.Pool.MergeSpeedMultiplier);
+        unit.NavigateTo(midpoint, unit.Pool.MoveSpeed * unit.Pool.MergeSpeedMultiplier);
 
         if (Vector2.Distance(new Vector2(unit.transform.position.x, unit.transform.position.z),
-                             new Vector2(nearest.transform.position.x, nearest.transform.position.z)) <= unit.Pool.MergeRadius)
-            unit.Data.Absorb(nearest.Data);
+                new Vector2(nearest.transform.position.x, nearest.transform.position.z)) <= unit.Pool.MergeRadius)
+            if (unit.Data.CurrentHp >= nearest.Data.CurrentHp)
+            {
+                unit.Data.Absorb(nearest.Data);
+            }
+            else
+            {
+                nearest.Data.Absorb(unit.Data);
+            }
+    }
+
+    public override void OnDeactivate(SlimeMono unit)
+    {
+        unit.SetMode(UnitMono.MoveMode.Controller);
     }
 }
