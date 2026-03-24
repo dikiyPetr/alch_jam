@@ -7,7 +7,7 @@ public class Slime
 {
     public enum State { Autonomous, Merging, Dead }
 
-    public SlimePool Pool { get; }
+    public SlimePool Pool { get; }      
     [field: SerializeField] public float ContainedMaxHp { get; private set; }
     [field: SerializeField] public float CurrentHp { get; private set; }
     [field: SerializeField] public State CurrentState { get; private set; }

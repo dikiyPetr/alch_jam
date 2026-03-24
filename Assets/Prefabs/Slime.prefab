@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4125453442490017711}
   - component: {fileID: 8395580553798742644}
   - component: {fileID: 5559963261905643009}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Slime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 2460033242120328016}
   - component: {fileID: 4060069746515596351}
   - component: {fileID: 6924696557857230612}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Quad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
