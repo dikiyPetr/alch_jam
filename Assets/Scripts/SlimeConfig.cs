@@ -40,4 +40,12 @@ public class SlimeConfig : ScriptableObject
 
     [Header("Рейкаст")]
     public LayerMask groundLayer;
+
+    [Header("Слои урона")]
+    // Слои, на которых находятся коллайдеры/триггеры источников урона
+    public LayerMask playerDamageSourceLayer;
+    public LayerMask enemyDamageSourceLayer;
+    // Маски целей: что бьёт игрок, что бьют враги
+    public LayerMask playerTargetLayers;
+    public LayerMask enemyTargetLayers;
 }

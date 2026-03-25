@@ -17,10 +17,12 @@ MonoBehaviour:
   moveSpeed: 2
   mergeSpeedMultiplier: 1
   baseUnitScale: 0.5
-  splitSpawnRadius: 1.5
+  splitSpawnRadius: 0.5
   mergeRadius: 0.5
   skillDuration: 3
-  useNavMesh: 0
+  projectileSpeedMultiplier: 3
+  projectileReturnDelay: 2
+  projectileSteeringSpeed: 4
   groundLayer:
     serializedVersion: 2
     m_Bits: 128

@@ -6,9 +6,11 @@ public class SlimeMono : UnitMono
     [SerializeField] SlimeMono slimePrefab;
 
     [SerializeField] Slime _data;
+    [SerializeField] SlimeStats _stats;
 
     public SlimePool Pool => SlimePoolMono.Instance.Pool;
     public Slime Data => _data;
+    public SlimeStats Stats => _stats;
 
     SlimeSkill _activeSkill;
     public bool HasActiveSkill => _activeSkill != null;

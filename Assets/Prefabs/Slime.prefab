@@ -35,6 +35,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8982816931476053482}
+  - {fileID: 982535646714236131}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4217987389504108782
@@ -55,6 +56,13 @@ MonoBehaviour:
     <ContainedMaxHp>k__BackingField: 0
     <CurrentHp>k__BackingField: 0
     <CurrentState>k__BackingField: 0
+  _stats:
+    contactDamage:
+      amount: 0
+    radiusDamage:
+      amount: 0
+    radiusRange: 0
+    radiusTickRate: 0
 --- !u!54 &4125453442490017711
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -275,3 +283,77 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BillboardSprite
   lockX: 0
   lockZ: 0
+--- !u!1 &6105104467785610825
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 982535646714236131}
+  - component: {fileID: 4658496595985593184}
+  - component: {fileID: 4594639009175916807}
+  m_Layer: 10
+  m_Name: RadiusZone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &982535646714236131
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6105104467785610825}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5504023404116098042}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &4658496595985593184
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6105104467785610825}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4594639009175916807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6105104467785610825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cad29896ff744c0d86de2861997df829, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeAreaDamageMono
+  _targetLayers:
+    serializedVersion: 2
+    m_Bits: 256
+  _tickRate: 1
+  _source: {fileID: 4217987389504108782}
+  _collider: {fileID: 4658496595985593184}
+  damage:
+    amount: 3

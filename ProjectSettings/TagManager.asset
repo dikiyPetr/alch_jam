@@ -13,10 +13,10 @@ TagManager:
   - UI
   - Slime
   - Ground
-  - 
-  - 
-  - 
-  - 
+  - DamageableEnemy
+  - DamageablePlayer
+  - PlayerDamageSource
+  - EnemyDamageSource
   - 
   - 
   - 

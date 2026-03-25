@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
@@ -34,7 +35,7 @@ namespace Spawner
     
     private void CheckTarget()
     {
-      var distanceToSlime = (transform.position - SlimePoolMono.Instance?.GetControlledSlime()?.transform.position)?.sqrMagnitude;
+      var distanceToSlime = (transform.position - SlimePoolMono.Instance?.GetControlledSlimes().First()?.transform.position)?.sqrMagnitude;
       if (distanceToSlime.HasValue && distanceToSlime < _followRadius * _followRadius)
       {
         foreach (var unit in pool)
