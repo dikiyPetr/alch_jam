@@ -1,20 +1,19 @@
 ﻿using UnityEngine;
 
+public class HomeData
+{
+  public Group group;
+}
 public class MoveHomeState : State
 {
-  private Vector3 _homePosition;
-
-  public MoveHomeState(AiController aiController, StateMachine stateMachine) : base(aiController, stateMachine)
+  private HomeData _data;
+  public MoveHomeState(AiController aiController, StateMachine stateMachine, HomeData data) : base(aiController, stateMachine)
   {
-    _homePosition = aiController.transform.position;
+    _data = data;
   }
 
   public override void Update()
   {
-    aiController.Unit.NavigateTo(_homePosition, 3);
-    if (_homePosition == aiController.Unit.transform.position)
-    {
-      stateMachine.ChangeState<IdleState>();
-    }
+    aiController.Unit.NavigateTo(_data.@group.transform.position, 3);
   }
 }
