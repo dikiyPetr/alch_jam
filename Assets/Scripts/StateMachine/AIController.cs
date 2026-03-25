@@ -2,6 +2,7 @@
 
 public abstract class AiController : MonoBehaviour
 {
+  
   protected StateMachine _stateMachine = new StateMachine();
 
   [SerializeField] protected UnitMono _unit;

@@ -26,30 +26,30 @@ public class MinionSkill : SlimeSkill
 
         _attackCooldown -= dt;
 
-        var controller = FindController();
-        if (controller == null)
+        var controllerTransform = FindNearestController(unit.transform.position);
+        if (controllerTransform == null)
         {
             unit.NavigateTo(unit.transform.position, 0f);
             return;
         }
 
         if (_mode == Mode.Orbit)
-            UpdateOrbit(unit, controller, dt);
+            UpdateOrbit(unit, controllerTransform, dt);
         else
-            UpdateAttack(unit, controller);
+            UpdateAttack(unit, controllerTransform);
     }
 
-    void UpdateOrbit(SlimeMono unit, SlimeMono controller, float dt)
+    void UpdateOrbit(SlimeMono unit, Transform controller, float dt)
     {
         var pool = unit.Pool;
 
         _orbitAngle += dt * 0.4f;
 
         var offset = new Vector3(Mathf.Cos(_orbitAngle), 0f, Mathf.Sin(_orbitAngle)) * pool.MinionOrbitRadius;
-        var orbitTarget = controller.transform.position + offset;
+        var orbitTarget = controller.position + offset;
         unit.NavigateTo(orbitTarget, pool.MoveSpeed * pool.MinionOrbitSpeedMultiplier);
 
-        var enemy = FindNearestEnemy(controller.transform.position, pool.MinionAttackScanRadius);
+        var enemy = FindNearestEnemy(controller.position, pool.MinionAttackScanRadius);
         if (enemy != null)
         {
             _currentTarget = enemy;
@@ -57,7 +57,7 @@ public class MinionSkill : SlimeSkill
         }
     }
 
-    void UpdateAttack(SlimeMono unit, SlimeMono controller)
+    void UpdateAttack(SlimeMono unit, Transform controller)
     {
         var pool = unit.Pool;
 
@@ -67,7 +67,7 @@ public class MinionSkill : SlimeSkill
             return;
         }
 
-        float distToController = Vector3.Distance(_currentTarget.transform.position, controller.transform.position);
+        float distToController = Vector3.Distance(_currentTarget.transform.position, controller.position);
         if (distToController > pool.MinionAttackLeashRadius)
         {
             _currentTarget = null;
@@ -107,10 +107,24 @@ public class MinionSkill : SlimeSkill
         return nearest;
     }
 
-    SlimeMono FindController()
+    Transform FindNearestController(Vector3 position)
     {
-        var controlled = SlimePoolMono.Instance.GetControlledSlimes();
-        return controlled.Count > 0 ? controlled[0] : null;
+        var candidates = SlimePoolMono.Instance.FindControllerTransform();
+        if (candidates == null || candidates.Count == 0) return null;
+
+        Transform nearest = null;
+        float bestSqDist = float.MaxValue;
+        foreach (var t in candidates)
+        {
+            if (t == null) continue;
+            float sqDist = (t.position - position).sqrMagnitude;
+            if (sqDist < bestSqDist)
+            {
+                bestSqDist = sqDist;
+                nearest = t;
+            }
+        }
+        return nearest;
     }
 
     public override void OnDeactivate(SlimeMono unit)
