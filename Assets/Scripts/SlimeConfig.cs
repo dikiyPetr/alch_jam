@@ -38,6 +38,15 @@ public class SlimeConfig : ScriptableObject
     // Насколько быстро снаряд разворачивается к цели в фазе возврата (коэф. lerp в секунду)
     public float projectileSteeringSpeed = 4f;
 
+    [Header("Миньон AI")]
+    public float minionOrbitRadius = 3f;
+    public float minionOrbitSpeedMultiplier = 0.8f;
+    public float minionAttackScanRadius = 5f;
+    public float minionAttackLeashRadius = 7f;
+    public float minionAttackDamage = 10f;
+    public float minionAttackCooldown = 0.5f;
+    public float minionAttackRange = 1.5f;
+
     [Header("Рейкаст")]
     public LayerMask groundLayer;
 
