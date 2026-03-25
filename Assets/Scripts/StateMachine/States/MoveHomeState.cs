@@ -8,7 +8,7 @@ public class MoveHomeState : State
   {
     _homePosition = aiController.transform.position;
   }
-  
+
   public override void Update()
   {
     aiController.Unit.NavigateTo(_homePosition, 3);
