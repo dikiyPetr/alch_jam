@@ -37,6 +37,8 @@ public class SlimeConfig : ScriptableObject
     public float projectileReturnDelay = 2f;
     // Насколько быстро снаряд разворачивается к цели в фазе возврата (коэф. lerp в секунду)
     public float projectileSteeringSpeed = 4f;
+    // Множитель radiusDamage пока слайм летит как снаряд
+    public float projectileDamageMultiplier = 2f;
 
     [Header("Миньон AI")]
     public float minionOrbitRadius = 3f;

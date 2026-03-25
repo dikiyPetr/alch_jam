@@ -9,6 +9,13 @@ public abstract class DamageSourceMono : MonoBehaviour
 
     float _timer;
 
+    // Позволяет подклассам (например SlimeAreaDamageMono) устанавливать тикрейт в рантайме
+    protected void SetTickRate(float rate)
+    {
+        _tickRate = rate;
+        _timer = 0f;
+    }
+
     void Update()
     {
         if (_tickRate <= 0f) return;

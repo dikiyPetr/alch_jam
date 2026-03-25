@@ -15,9 +15,10 @@ public class SlimePool
     public float MaxSplitInterval => SlimeConfig.Instance.maxSplitInterval;
     public float SplitKickDuration => SlimeConfig.Instance.splitKickDuration;
     public float SkillDuration => SlimeConfig.Instance.skillDuration;
-    public float ProjectileSpeedMultiplier => SlimeConfig.Instance.projectileSpeedMultiplier;
-    public float ProjectileReturnDelay     => SlimeConfig.Instance.projectileReturnDelay;
-    public float ProjectileSteeringSpeed   => SlimeConfig.Instance.projectileSteeringSpeed;
+    public float ProjectileSpeedMultiplier   => SlimeConfig.Instance.projectileSpeedMultiplier;
+    public float ProjectileReturnDelay      => SlimeConfig.Instance.projectileReturnDelay;
+    public float ProjectileSteeringSpeed    => SlimeConfig.Instance.projectileSteeringSpeed;
+    public float ProjectileDamageMultiplier => SlimeConfig.Instance.projectileDamageMultiplier;
     public float MinionOrbitRadius         => SlimeConfig.Instance.minionOrbitRadius;
     public float MinionOrbitSpeedMultiplier => SlimeConfig.Instance.minionOrbitSpeedMultiplier;
     public float MinionAttackScanRadius    => SlimeConfig.Instance.minionAttackScanRadius;

@@ -58,11 +58,11 @@ MonoBehaviour:
     <CurrentState>k__BackingField: 0
   _stats:
     contactDamage:
-      amount: 0
+      amount: 3
     radiusDamage:
-      amount: 0
-    radiusRange: 0
-    radiusTickRate: 0
+      amount: 100
+    radiusRange: 1
+    radiusTickRate: 1
 --- !u!54 &4125453442490017711
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -109,7 +109,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.3
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
@@ -154,7 +154,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 1
-  m_Radius: 0.5
+  m_Radius: 0.3
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08

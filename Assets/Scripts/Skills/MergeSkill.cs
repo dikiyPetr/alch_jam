@@ -25,13 +25,11 @@ public class MergeSkill : SlimeSkill
         if (Vector2.Distance(new Vector2(unit.transform.position.x, unit.transform.position.z),
                 new Vector2(nearest.transform.position.x, nearest.transform.position.z)) <= unit.Pool.MergeRadius)
             if (unit.Data.CurrentHp >= nearest.Data.CurrentHp)
-            {
-                unit.Data.Absorb(nearest.Data);
-            }
+                // unit поглощает nearest: суммирует урон и HP
+                unit.AbsorbMono(nearest);
             else
-            {
-                nearest.Data.Absorb(unit.Data);
-            }
+                // nearest поглощает unit: суммирует урон и HP
+                nearest.AbsorbMono(unit);
     }
 
     public override void OnDeactivate(SlimeMono unit)

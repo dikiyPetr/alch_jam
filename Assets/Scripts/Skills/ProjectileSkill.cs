@@ -25,8 +25,14 @@ public class ProjectileSkill : SlimeSkill
     public override void OnActivate(SlimeMono unit)
     {
         unit.SetLinearDrag(0f);
+        unit.DamageMultiplier = unit.Pool.ProjectileDamageMultiplier;
         // Единственный вызов задания скорости — дальше физика сама
         unit.ApplyImpulse(_direction * unit.Pool.MoveSpeed * _speedMultiplier);
+    }
+
+    public override void OnDeactivate(SlimeMono unit)
+    {
+        unit.DamageMultiplier = 1f;
     }
 
     public override void Update(SlimeMono unit, float dt)

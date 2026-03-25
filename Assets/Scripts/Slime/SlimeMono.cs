@@ -8,6 +8,9 @@ public class SlimeMono : UnitMono
     [SerializeField] Slime _data;
     [SerializeField] SlimeStats _stats;
 
+    // Ищем в детях, чтобы не требовать ручной привязки в инспекторе
+    SlimeAreaDamageMono _areaDamage;
+
     public SlimePool Pool => SlimePoolMono.Instance.Pool;
     public Slime Data => _data;
     public SlimeStats Stats => _stats;
@@ -15,13 +18,41 @@ public class SlimeMono : UnitMono
     SlimeSkill _activeSkill;
     public bool HasActiveSkill => _activeSkill != null;
 
+    // Транзитный множитель урона — применяется скиллами (например ProjectileSkill)
+    [field: SerializeField] public float DamageMultiplier { get; set; } = 1f;
+
     protected override float MoveSpeed => Pool.MoveSpeed;
 
+    protected override void Awake()
+    {
+        base.Awake();
+        _areaDamage = GetComponentInChildren<SlimeAreaDamageMono>();
+    }
+
+    // Первоначальный спавн — stats берутся из инспектора префаба
     public void Initialize(Slime data)
     {
         _data = data;
         _data.OnStateChanged += OnStateChanged;
         _data.OnDied += _ => Destroy(gameObject);
+        _areaDamage?.Initialize(this);
+    }
+
+    // Спавн при сплите — stats приходят от родительского слайма
+    public void Initialize(Slime data, SlimeStats stats)
+    {
+        _stats = stats;
+        Initialize(data);
+    }
+
+    // Поглощает другой слайм: суммирует radiusDamage и передаёт HP.
+    // Проверяем состояние до прибавления урона — Data.Absorb тоже защищён этой проверкой,
+    // но урон мог бы прибавиться несколько раз если несколько слаймов нацелились на одного
+    public void AbsorbMono(SlimeMono other)
+    {
+        if (other.Data.CurrentState == Slime.State.Dead) return;
+        _stats.radiusDamage.amount += other.Stats.radiusDamage.amount;
+        Data.Absorb(other.Data);
     }
 
     void OnDestroy()
@@ -68,8 +99,7 @@ public class SlimeMono : UnitMono
     public void TriggerSplit()
     {
         if (!_data.CanSplit) return;
-        var split = _data.Split(1);
-        foreach (var s in split)
+        foreach (var s in _data.Split(1))
             KickSlime(SpawnSplitSlime(s));
     }
 
@@ -93,8 +123,7 @@ public class SlimeMono : UnitMono
         var wait = new WaitForSeconds(Pool.MaxSplitInterval);
         while (_data != null && _data.CanSplit)
         {
-            var splits = _data.Split(1);
-            KickSlime(SpawnSplitSlime(splits[0]));
+            KickSlime(SpawnSplitSlime(_data.Split(1)[0]));
             yield return wait;
         }
     }
@@ -102,8 +131,7 @@ public class SlimeMono : UnitMono
     public void TriggerSkillSplit()
     {
         if (!_data.CanSplit) return;
-        var split = _data.Split(1);
-        foreach (var s in split)
+        foreach (var s in _data.Split(1))
             SpawnSplitSlime(s).ActivateSkill(new CursorSkill(Pool.SkillDuration));
     }
 
@@ -114,21 +142,36 @@ public class SlimeMono : UnitMono
         var dir = CursorWorldPosition.Instance.Position - transform.position;
         dir.y = 0f;
         dir.Normalize();
-        var split = _data.Split(1);
-        foreach (var s in split)
+        foreach (var s in _data.Split(1))
             SpawnSplitSlime(s).ActivateSkill(
                 new ProjectileSkill(dir, Pool.ProjectileReturnDelay, Pool.ProjectileSpeedMultiplier));
     }
 
-    SlimeMono SpawnSplitSlime(Slime data)
+    // Единственное место расчёта пропорции урона при сплите.
+    // После Slime.Split/SplitHalf сумма HP родителя и нового слайма = исходному HP,
+    // поэтому originalMaxHp можно восстановить без явного сохранения до деления.
+    SlimeMono SpawnSplitSlime(Slime splitData)
     {
+        float originalHp   = _data.ContainedMaxHp + splitData.ContainedMaxHp;
+        float proportion   = splitData.ContainedMaxHp / originalHp;
+        float splitDamage  = _stats.radiusDamage.amount * proportion;
+        _stats.radiusDamage.amount -= splitDamage;
+
         // Небольшой случайный оффсет чтобы коллайдер нового слайма не перекрывался
         // с родительским — это предотвращает нежелательный overlap resolution от физики
         var offset = Random.insideUnitCircle * 0.1f;
         var pos = transform.position + new Vector3(offset.x, 0f, offset.y);
         var spawned = Instantiate(slimePrefab, pos, Quaternion.identity);
         SlimePoolMono.Instance.RegisterMono(spawned);
-        spawned.Initialize(data);
+        // Копируем stats родителя, переопределяя только radiusDamage
+        var stats = new SlimeStats
+        {
+            contactDamage = new Damage { amount = _stats.contactDamage.amount },
+            radiusDamage  = new Damage { amount = splitDamage },
+            radiusRange    = _stats.radiusRange,
+            radiusTickRate = _stats.radiusTickRate,
+        };
+        spawned.Initialize(splitData, stats);
         return spawned;
     }
 
