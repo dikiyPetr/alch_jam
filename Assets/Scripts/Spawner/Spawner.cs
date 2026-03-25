@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 
 namespace Spawner
 {
+  [RequireComponent(typeof(SphereCollider))]
   public class Spawner : MonoBehaviour
   {
     [SerializeField] private float _spawnRadius;
@@ -15,44 +16,25 @@ namespace Spawner
     [SerializeField] private float _homeRadius;
 
     [SerializeField] AiController[] unitPrefabs;
-    private List<AiController> pool = new List<AiController>();
-    private void Start()
-    {
-      Spawn();
-      StartCheck().Forget();
-    }
-    
-    private async UniTaskVoid StartCheck()
-    {
-      var token = this.GetCancellationTokenOnDestroy();
 
-      while (true)
-      {
-        CheckTarget();
-        await UniTask.Delay(1000, cancellationToken: token);
-      }
-    }
-    
-    private void CheckTarget()
+    private List<AiController> pool = new List<AiController>();
+
+    void OnTriggerEnter(Collider other)
     {
-      var distanceToSlime = (transform.position - SlimePoolMono.Instance?.GetControlledSlimes().First()?.transform.position)?.sqrMagnitude;
-      if (distanceToSlime.HasValue && distanceToSlime < _followRadius * _followRadius)
+      if (other.TryGetComponent<SlimeMono>(out var slime))
       {
         foreach (var unit in pool)
         {
           unit.SetState<FollowState>();
         }
-
-      }
-
-      foreach (var unit in pool)
-      {
-        var distance = (transform.position - unit.transform.position).sqrMagnitude;
-
-        if(distance > _homeRadius * _homeRadius) unit.SetState<MoveHomeState>();
       }
     }
 
+    private void Start()
+    {
+      Spawn();
+    }
+    
     public void Spawn()
     {
       foreach (var unitPrefab in unitPrefabs)
