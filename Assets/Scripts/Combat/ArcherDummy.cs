@@ -2,28 +2,32 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class DummyMono : MonoBehaviour, IHittable
+// Манекен лучника — атакует ближайшую цель в зоне с кулдауном.
+public class ArcherDummy : SingleTargetAttackerMono
 {
+    [SerializeField] float _damage = 15f;
     [SerializeField] TextMeshPro _totalText;
-
     [SerializeField] float _dpsWindow = 3f;
 
     float _totalDamage;
     float _lastHit;
 
-    // Очередь пар (время удара, урон) для скользящего DPS-окна
     readonly Queue<(float time, float amount)> _hits = new();
 
-    public void TakeDamage(float amount, UnitMono source)
+    protected override (IHittable target, Vector3 pos) SelectTarget() => SelectNearest();
+
+    protected override void Attack(IHittable target, Vector3 targetPos)
     {
-        _totalDamage += amount;
-        _lastHit = amount;
-        _hits.Enqueue((Time.time, amount));
+        target.TakeDamage(_damage);
+        _totalDamage += _damage;
+        _lastHit = _damage;
+        _hits.Enqueue((Time.time, _damage));
     }
 
-    void Update()
+    protected override void OnUpdate()
     {
-        // Удаляем удары старше окна
+        if (_totalText == null) return;
+
         float cutoff = Time.time - _dpsWindow;
         while (_hits.Count > 0 && _hits.Peek().time < cutoff)
             _hits.Dequeue();

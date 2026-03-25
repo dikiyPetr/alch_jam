@@ -82,7 +82,7 @@ public class MinionSkill : SlimeSkill
             float dist = Vector3.Distance(unit.transform.position, _currentTarget.transform.position);
             if (dist <= pool.MinionAttackRange && _currentTarget.TryGetComponent<IHittable>(out var hittable))
             {
-                hittable.TakeDamage(pool.MinionAttackDamage, unit);
+                hittable.TakeDamage(pool.MinionAttackDamage);
                 _attackCooldown = pool.MinionAttackCooldown;
             }
         }

@@ -1,23 +1,34 @@
 using UnityEngine;
 
-// Базовый класс для компонентов нанесения урона через коллизии.
-// Все зависимости (юнит, маска слоёв) задаются через поля инспектора.
+// Базовый класс для компонентов нанесения урона.
+// _rangeFinder — отдельный компонент с коллайдером и отслеживанием целей.
 public abstract class DamageSourceMono : MonoBehaviour
 {
-    [SerializeField] protected LayerMask _targetLayers;
-    [SerializeField] float _tickRate;   // 0 — без периодичности
+    [SerializeField] protected DamageRangeFinder _rangeFinder;
+    [SerializeField] LayerMask _targetLayers;
+    [SerializeField] float _tickRate; // 0 — без периодичности
 
     float _timer;
 
-    // Позволяет подклассам (например SlimeAreaDamageMono) устанавливать тикрейт в рантайме
+    protected void Awake()
+    {
+        if (_rangeFinder != null)
+            _rangeFinder.targetLayers = _targetLayers;
+    }
+
+    protected virtual void OnAwake()
+    {
+    }
+
     protected void SetTickRate(float rate)
     {
         _tickRate = rate;
         _timer = 0f;
     }
 
-    void Update()
+    protected void Update()
     {
+        OnUpdate();
         if (_tickRate <= 0f) return;
         _timer += Time.deltaTime;
         if (_timer < _tickRate) return;
@@ -25,16 +36,13 @@ public abstract class DamageSourceMono : MonoBehaviour
         Tick();
     }
 
-    // Вызывается каждый тик — переопредели в подклассе если нужна периодичность
-    protected virtual void Tick() { }
-
-    protected abstract float GetDamage();
-
-    protected bool TryGetTarget(GameObject go, out IHittable target)
+    protected virtual void OnUpdate()
     {
-        target = null;
-        return IsInLayerMask(go.layer, _targetLayers) && go.TryGetComponent(out target);
     }
 
-    static bool IsInLayerMask(int layer, LayerMask mask) => (mask.value & (1 << layer)) != 0;
+    protected virtual void Tick()
+    {
+    }
+
+    protected abstract float GetDamage();
 }

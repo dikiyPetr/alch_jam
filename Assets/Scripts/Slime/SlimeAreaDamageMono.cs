@@ -10,7 +10,7 @@ public class SlimeAreaDamageMono : AreaDamageMono
         _slime = slime;
         SetTickRate(slime.Stats.radiusTickRate);
         // Устанавливаем радиус коллайдера из stats слайма
-        if (_collider is SphereCollider sphere)
+        if (_rangeFinder != null && _rangeFinder.Collider is SphereCollider sphere)
             sphere.radius = slime.Stats.radiusRange;
     }
 

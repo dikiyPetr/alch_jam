@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0530d0d758dcbc44dafc1b57cfe65dec, type: 3}
   m_Name: SlimeConfig
   m_EditorClassIdentifier: Assembly-CSharp::SlimeConfig
-  hpPerUnit: 50
-  initialMaxHp: 500
+  hpPerUnit: 30
+  initialMaxHp: 1000
   moveSpeed: 2
   mergeSpeedMultiplier: 1
   baseUnitScale: 0.5
@@ -26,6 +26,7 @@ MonoBehaviour:
   projectileSpeedMultiplier: 3
   projectileReturnDelay: 2
   projectileSteeringSpeed: 4
+  projectileDamageMultiplier: 2
   minionOrbitRadius: 1
   minionOrbitSpeedMultiplier: 0.8
   minionAttackScanRadius: 2

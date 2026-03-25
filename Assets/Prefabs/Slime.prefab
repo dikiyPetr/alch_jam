@@ -36,6 +36,7 @@ Transform:
   m_Children:
   - {fileID: 8982816931476053482}
   - {fileID: 982535646714236131}
+  - {fileID: 5906937599106288310}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4217987389504108782
@@ -63,6 +64,7 @@ MonoBehaviour:
       amount: 100
     radiusRange: 1
     radiusTickRate: 1
+  <DamageMultiplier>k__BackingField: 1
 --- !u!54 &4125453442490017711
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -353,7 +355,74 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _tickRate: 1
-  _source: {fileID: 4217987389504108782}
   _collider: {fileID: 4658496595985593184}
-  damage:
-    amount: 3
+  _slime: {fileID: 0}
+--- !u!1 &7134748139754257260
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5906937599106288310}
+  - component: {fileID: 6300066612818641054}
+  - component: {fileID: 856539566665197812}
+  m_Layer: 9
+  m_Name: SlimeHitbox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5906937599106288310
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7134748139754257260}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5504023404116098042}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6300066612818641054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7134748139754257260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d98323ad3e56943489fed3b650c12be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeHitbox
+  _slime: {fileID: 4217987389504108782}
+--- !u!136 &856539566665197812
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7134748139754257260}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.4
+  m_Height: 0.4
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}

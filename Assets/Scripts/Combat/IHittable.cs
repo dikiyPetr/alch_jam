@@ -1,4 +1,4 @@
 public interface IHittable
 {
-    void TakeDamage(float amount, UnitMono source);
+    void TakeDamage(float amount);
 }
