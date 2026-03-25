@@ -18,6 +18,13 @@ public class SlimePool
     public float ProjectileSpeedMultiplier => SlimeConfig.Instance.projectileSpeedMultiplier;
     public float ProjectileReturnDelay     => SlimeConfig.Instance.projectileReturnDelay;
     public float ProjectileSteeringSpeed   => SlimeConfig.Instance.projectileSteeringSpeed;
+    public float MinionOrbitRadius         => SlimeConfig.Instance.minionOrbitRadius;
+    public float MinionOrbitSpeedMultiplier => SlimeConfig.Instance.minionOrbitSpeedMultiplier;
+    public float MinionAttackScanRadius    => SlimeConfig.Instance.minionAttackScanRadius;
+    public float MinionAttackLeashRadius   => SlimeConfig.Instance.minionAttackLeashRadius;
+    public float MinionAttackDamage        => SlimeConfig.Instance.minionAttackDamage;
+    public float MinionAttackCooldown      => SlimeConfig.Instance.minionAttackCooldown;
+    public float MinionAttackRange         => SlimeConfig.Instance.minionAttackRange;
 
     private readonly List<Slime> _slimes = new();
     public IReadOnlyList<Slime> Slimes => _slimes;

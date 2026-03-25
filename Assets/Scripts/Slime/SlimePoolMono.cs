@@ -14,6 +14,7 @@ public class SlimePoolMono : MonoBehaviour, InputSystem_Actions.IPlayerActions
     public Vector2 MoveInput { get; private set; }
 
     readonly List<SlimeMono> _activeMono = new();
+    public IReadOnlyList<SlimeMono> AllMono => _activeMono;
     InputSystem_Actions _actions;
 
     void Awake()
@@ -23,7 +24,7 @@ public class SlimePoolMono : MonoBehaviour, InputSystem_Actions.IPlayerActions
         Pool = new SlimePool();
         _actions = new InputSystem_Actions();
         _actions.Player.AddCallbacks(this);
-    }   
+    }
 
     void OnEnable() => _actions.Player.Enable();
     void OnDisable() => _actions.Player.Disable();
@@ -40,6 +41,15 @@ public class SlimePoolMono : MonoBehaviour, InputSystem_Actions.IPlayerActions
     }
 
     public void UnregisterMono(SlimeMono mono) => _activeMono.Remove(mono);
+
+    public List<Transform> FindControllerTransform()
+    {
+        var controlled = GetControlledSlimes();
+        if (controlled.Count > 0) return controlled.ConvertAll((v) => v.transform);
+
+        var controlledFantom = PhantomController.Instance.gameObject;
+        return new List<Transform> { controlledFantom.transform };
+    }
 
     // Управляемые слаймы — все с максимальным округлённым HP среди тех, кто может делиться
     public List<SlimeMono> GetControlledSlimes()
@@ -80,6 +90,7 @@ public class SlimePoolMono : MonoBehaviour, InputSystem_Actions.IPlayerActions
             if (m == null || m.Data == null || !m.Data.CanSplit) continue;
             if (Mathf.RoundToInt(m.Data.ContainedMaxHp) > monoHp) return false;
         }
+
         return true;
     }
 

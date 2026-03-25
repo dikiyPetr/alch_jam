@@ -45,8 +45,8 @@ public class SlimeMono : UnitMono
             var input = SlimePoolMono.Instance.MoveInput;
             MoveAsController(new Vector3(input.x, 0f, input.y).normalized);
         }
-        else
-            StopMovement();
+        else if (_activeSkill == null)
+            ActivateSkill(new MinionSkill());
 
         UpdateScale();
     }

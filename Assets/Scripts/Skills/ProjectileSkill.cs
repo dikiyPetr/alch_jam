@@ -9,8 +9,8 @@ using UnityEngine;
 /// </summary>
 public class ProjectileSkill : SlimeSkill
 {
-    readonly Vector3 _direction;      // направление броска, зафиксированное при активации
-    readonly float _returnDelay;      // время до начала возврата (секунды)
+    readonly Vector3 _direction; // направление броска, зафиксированное при активации
+    readonly float _returnDelay; // время до начала возврата (секунды)
     readonly float _speedMultiplier;
 
     float _timer;
@@ -35,7 +35,6 @@ public class ProjectileSkill : SlimeSkill
 
         if (_timer >= _returnDelay)
         {
-            unit.ActivateSkill(new MergeSkill());
             IsComplete = true;
         }
     }
