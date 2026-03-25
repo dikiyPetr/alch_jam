@@ -26,9 +26,17 @@ namespace Spawner
     {
       var token = this.GetCancellationTokenOnDestroy();
 
-      while (true)
+      while (!token.IsCancellationRequested)
       {
-        CheckTarget();
+        try
+        {
+          CheckTarget();
+        }
+        catch (Exception e)
+        {
+          Debug.LogWarning(e);
+        }
+
         await UniTask.Delay(1000, cancellationToken: token);
       }
     }
