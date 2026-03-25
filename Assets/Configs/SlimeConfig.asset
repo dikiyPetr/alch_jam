@@ -28,8 +28,8 @@ MonoBehaviour:
   projectileSteeringSpeed: 4
   minionOrbitRadius: 1
   minionOrbitSpeedMultiplier: 0.8
-  minionAttackScanRadius: 5
-  minionAttackLeashRadius: 7
+  minionAttackScanRadius: 2
+  minionAttackLeashRadius: 3
   minionAttackDamage: 10
   minionAttackCooldown: 0.5
   minionAttackRange: 1.5
