@@ -71,7 +71,7 @@ public class SlimeMono : UnitMono
             return;
         }
 
-        if (SlimePoolMono.Instance.IsControlled(this))
+        if (SlimePoolMono.Instance.IsControlled(this) && _activeSkill is not MergeSkill)
         {
             var input = SlimePoolMono.Instance.MoveInput;
             MoveAsController(new Vector3(input.x, 0f, input.y).normalized);
@@ -152,9 +152,9 @@ public class SlimeMono : UnitMono
     // поэтому originalMaxHp можно восстановить без явного сохранения до деления.
     SlimeMono SpawnSplitSlime(Slime splitData)
     {
-        float originalHp   = _data.ContainedMaxHp + splitData.ContainedMaxHp;
-        float proportion   = splitData.ContainedMaxHp / originalHp;
-        float splitDamage  = _stats.radiusDamage.amount * proportion;
+        float originalHp = _data.ContainedMaxHp + splitData.ContainedMaxHp;
+        float proportion = splitData.ContainedMaxHp / originalHp;
+        float splitDamage = _stats.radiusDamage.amount * proportion;
         _stats.radiusDamage.amount -= splitDamage;
 
         // Небольшой случайный оффсет чтобы коллайдер нового слайма не перекрывался
@@ -167,8 +167,8 @@ public class SlimeMono : UnitMono
         var stats = new SlimeStats
         {
             contactDamage = new Damage { amount = _stats.contactDamage.amount },
-            radiusDamage  = new Damage { amount = splitDamage },
-            radiusRange    = _stats.radiusRange,
+            radiusDamage = new Damage { amount = splitDamage },
+            radiusRange = _stats.radiusRange,
             radiusTickRate = _stats.radiusTickRate,
         };
         spawned.Initialize(splitData, stats);
@@ -192,6 +192,13 @@ public class SlimeMono : UnitMono
         skill.OnActivate(this);
     }
 
+    public void CancelSkillIfType<T>() where T : SlimeSkill
+    {
+        if (_activeSkill is not T) return;
+        _activeSkill.OnDeactivate(this);
+        _activeSkill = null;
+    }
+
     protected bool UpdateSkill(float dt)
     {
         if (_activeSkill == null) return false;
@@ -201,6 +208,7 @@ public class SlimeMono : UnitMono
             _activeSkill.OnDeactivate(this);
             _activeSkill = null;
         }
+
         return true;
     }
 }

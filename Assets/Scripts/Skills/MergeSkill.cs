@@ -22,8 +22,11 @@ public class MergeSkill : SlimeSkill
         var midpoint = (unit.transform.position + nearest.transform.position) * 0.5f;
         unit.NavigateTo(midpoint, unit.Pool.MoveSpeed * unit.Pool.MergeSpeedMultiplier);
 
+        float mergeRadius = unit.Pool.MergeRadius
+            * (unit.transform.localScale.x + nearest.transform.localScale.x);
+
         if (Vector2.Distance(new Vector2(unit.transform.position.x, unit.transform.position.z),
-                new Vector2(nearest.transform.position.x, nearest.transform.position.z)) <= unit.Pool.MergeRadius)
+                new Vector2(nearest.transform.position.x, nearest.transform.position.z)) <= mergeRadius)
             if (unit.Data.CurrentHp >= nearest.Data.CurrentHp)
                 // unit поглощает nearest: суммирует урон и HP
                 unit.AbsorbMono(nearest);

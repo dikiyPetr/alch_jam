@@ -196,11 +196,16 @@ public class SlimePoolMono : MonoBehaviour, InputSystem_Actions.IPlayerActions
 
     public void OnSkill_Merge(InputAction.CallbackContext ctx)
     {
-        if (!ctx.started) return;
-        // Все слаймы кроме управляемых сливаются
-        foreach (var mono in new List<SlimeMono>(_activeMono))
-            if (!IsControlled(mono))
+        if (ctx.started)
+        {
+            foreach (var mono in new List<SlimeMono>(_activeMono))
                 mono.ActivateSkill(new MergeSkill());
+        }
+        else if (ctx.canceled)
+        {
+            foreach (var mono in new List<SlimeMono>(_activeMono))
+                mono.CancelSkillIfType<MergeSkill>();
+        }
     }
 
     public void OnSkill_Following(InputAction.CallbackContext ctx)

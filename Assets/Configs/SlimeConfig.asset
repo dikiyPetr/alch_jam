@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SlimeConfig
   hpPerUnit: 30
   initialMaxHp: 1000
-  moveSpeed: 2
-  mergeSpeedMultiplier: 1
+  moveSpeed: 3
+  mergeSpeedMultiplier: 2
   baseUnitScale: 0.5
   splitSpawnRadius: 0.5
   mergeRadius: 0.5
