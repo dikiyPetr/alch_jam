@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-// Манекен мага — кидает снаряд ProjectileAreaDamage в ближайшую цель.
+// Манекен мага — кидает метеор в ближайшую цель.
 // Статистика урона собирается через событие OnDamageDealt каждого снаряда.
 public class MageDummy : SingleTargetAttackerMono
 {
-    [SerializeField] ProjectileAreaDamage _projectilePrefab;
+    [SerializeField] MeteorAreaDamage _projectilePrefab;
     [SerializeField] TextMeshPro _totalText;
     [SerializeField] float _dpsWindow = 3f;
 
@@ -19,7 +19,7 @@ public class MageDummy : SingleTargetAttackerMono
 
     protected override void Attack(IHittable target, Vector3 targetPos)
     {
-        var projectile = Instantiate(_projectilePrefab, transform.position, Quaternion.identity);
+        var projectile = Instantiate(_projectilePrefab, targetPos, Quaternion.identity);
         projectile.Launch(targetPos);
         projectile.OnDamageDealt += amount =>
         {

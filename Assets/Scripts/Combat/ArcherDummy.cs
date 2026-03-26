@@ -2,10 +2,12 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-// Манекен лучника — атакует ближайшую цель в зоне с кулдауном.
+// Манекен лучника — стреляет стрелой в ближайшую цель.
 public class ArcherDummy : SingleTargetAttackerMono
 {
+    [SerializeField] ArrowProjectile _arrowPrefab;
     [SerializeField] float _damage = 15f;
+    [SerializeField] float _arrowSpeed = 12f;
     [SerializeField] TextMeshPro _totalText;
     [SerializeField] float _dpsWindow = 3f;
 
@@ -18,10 +20,15 @@ public class ArcherDummy : SingleTargetAttackerMono
 
     protected override void Attack(IHittable target, Vector3 targetPos)
     {
-        target.TakeDamage(_damage);
-        _totalDamage += _damage;
-        _lastHit = _damage;
-        _hits.Enqueue((Time.time, _damage));
+        if (target is not Component c) return;
+        var arrow = Instantiate(_arrowPrefab, transform.position, Quaternion.identity);
+        arrow.Launch(c.transform, _damage, _arrowSpeed);
+        arrow.OnHit += amount =>
+        {
+            _totalDamage += amount;
+            _lastHit = amount;
+            _hits.Enqueue((Time.time, amount));
+        };
     }
 
     protected override void OnUpdate()
