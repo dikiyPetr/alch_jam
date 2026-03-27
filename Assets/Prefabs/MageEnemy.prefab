@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 324561648593891859}
   - component: {fileID: 7146070604207983176}
   m_Layer: 0
-  m_Name: ArcherEnemy
+  m_Name: MageEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -104,7 +104,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyUnitMono
   moveMode: 0
-  _maxHp: 10
+  _maxHp: 100
   _moveSpeed: 3
 --- !u!114 &3050415108222150613
 MonoBehaviour:
@@ -127,9 +127,6 @@ MonoBehaviour:
   _clipIdle: {fileID: 11400000, guid: 9f99bd8d46b1db24e972c4471bc7847d, type: 2}
   _clipWalk: {fileID: 11400000, guid: 9fbff266bc8900947a4eb47e74a07171, type: 2}
   _clipAttack: {fileID: 11400000, guid: 660df58002e96ed4f8766a1166cddee9, type: 2}
-  _clipDeath: {fileID: 11400000, guid: a935ab68e930d61459c27eceb678befd, type: 2}
-  _hitFlashColor: {r: 1, g: 0.2, b: 0.2, a: 1}
-  _hitFlashDuration: 0.15
 --- !u!114 &1976677525322407354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145,7 +142,6 @@ MonoBehaviour:
   _minRange: 5
   _maxRange: 8
   _moveSpeed: 3
-  _hysteresis: 1
 --- !u!114 &324561648593891859
 MonoBehaviour:
   m_ObjectHideFlags: 0

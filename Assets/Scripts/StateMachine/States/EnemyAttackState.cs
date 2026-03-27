@@ -22,7 +22,7 @@ public class EnemyAttackState : State
         _enemy.Attack.TryAttack(target);
         _enemy.SetDebugInfo("Attack", $"cd: {_enemy.Attack.CooldownRemaining:F1}");
 
-        if (!_enemy.Movement.IsInPosition(_enemy.Unit.transform, target))
+        if (!_enemy.Movement.IsStillInPosition(_enemy.Unit.transform, target))
             ChangeState<EnemyMoveState>();
     }
 }

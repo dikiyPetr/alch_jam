@@ -22,9 +22,23 @@ public abstract class EnemyController : AiController
         _stateMachine.AddState(new EnemyAttackState(this, _stateMachine));
         RegisterStates();
         _stateMachine.Initialize<EnemyIdleState>();
+
+        if (_unit is EnemyUnitMono enemyUnit)
+            enemyUnit.OnDied += HandleDied;
     }
 
     protected virtual void RegisterStates() { }
+
+    void HandleDied()
+    {
+        _attack?.CancelWindup();
+        _unit.StopMovement();
+        enabled = false; // останавливает Update → стейт-машина замирает
+        OnDied();
+    }
+
+    // Переопределяй в подклассе для анимации смерти и Destroy.
+    protected virtual void OnDied() => Destroy(gameObject);
 
     public void SetDebugInfo(string stateName, string param)
     {

@@ -18,7 +18,12 @@ public class BillboardAnimator : MonoBehaviour
 
     MeshRenderer _rend;
     MaterialPropertyBlock _block;
-    static readonly int StID = Shader.PropertyToID("_BaseMap_ST");
+    static readonly int StID    = Shader.PropertyToID("_BaseMap_ST");
+    static readonly int ColorId = Shader.PropertyToID("_BaseColor");
+
+    Color _flashFrom;
+    float _flashTimer;
+    float _flashDuration;
 
     SpriteAnimClip _current;
     int _localFrame;
@@ -63,8 +68,24 @@ public class BillboardAnimator : MonoBehaviour
         ApplyFrame(0);
     }
 
+    // Мигнуть цветом и плавно вернуться к белому.
+    public void Flash(Color color, float duration)
+    {
+        _flashFrom     = color;
+        _flashTimer    = duration;
+        _flashDuration = duration;
+        SetColor(color);
+    }
+
     void Update()
     {
+        if (_flashTimer > 0f)
+        {
+            _flashTimer -= Time.deltaTime;
+            float t = 1f - Mathf.Clamp01(_flashTimer / _flashDuration);
+            SetColor(Color.Lerp(_flashFrom, Color.white, t));
+        }
+
         if (_current == null) return;
 
         _timer += Time.deltaTime;
@@ -99,6 +120,13 @@ public class BillboardAnimator : MonoBehaviour
         if (_current.eventFrames == null) return;
         foreach (var ef in _current.eventFrames)
             if (ef == localFrame) { OnEventFrame?.Invoke(_current, localFrame); return; }
+    }
+
+    void SetColor(Color color)
+    {
+        _rend.GetPropertyBlock(_block);
+        _block.SetColor(ColorId, color);
+        _rend.SetPropertyBlock(_block);
     }
 
     void ApplyFrame(int localFrame)

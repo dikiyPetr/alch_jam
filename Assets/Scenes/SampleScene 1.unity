@@ -1335,6 +1335,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ArcherEnemy
       objectReference: {fileID: 0}
+    - target: {fileID: 6032645917439956209, guid: 980989ae143bc3248a41a6560a0281ea, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6442100233562428089, guid: 980989ae143bc3248a41a6560a0281ea, type: 3}
       propertyPath: m_LocalPosition.x
       value: -9.63
@@ -1378,10 +1382,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6032645917439956209, guid: 980989ae143bc3248a41a6560a0281ea, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 980989ae143bc3248a41a6560a0281ea, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

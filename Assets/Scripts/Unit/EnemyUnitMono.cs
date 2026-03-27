@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 
 // Базовый юнит врага: хранит HP, принимает урон, умирает.
+// OnDied — контроллер сам отвечает за Destroy после анимации смерти.
 public class EnemyUnitMono : UnitMono, IHittable
 {
     [SerializeField] float _maxHp = 100f;
@@ -10,6 +11,7 @@ public class EnemyUnitMono : UnitMono, IHittable
     float _currentHp;
 
     public event Action OnDied;
+    public event Action<float> OnHit;
 
     protected override float MoveSpeed => _moveSpeed;
 
@@ -23,13 +25,14 @@ public class EnemyUnitMono : UnitMono, IHittable
     {
         if (_currentHp <= 0f) return;
         _currentHp -= amount;
-        if (_currentHp <= 0f)
-            Die();
+        OnHit?.Invoke(amount);
+        if (_currentHp <= 0f) Die();
     }
 
     void Die()
     {
+        _currentHp = 0f;
         OnDied?.Invoke();
-        Destroy(gameObject);
+        // Destroy не вызываем — контроллер дожидается анимации смерти и уничтожает объект.
     }
 }
