@@ -122,6 +122,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BillboardSprite
   lockX: 0
   lockZ: 0
+  _directionAngleOffset: 0
 --- !u!1 &6689301156024041050
 GameObject:
   m_ObjectHideFlags: 0
@@ -168,5 +169,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArrowProjectile
   _arrivalRadius: 0.4
-  _sprite: {fileID: 0}
-  _spriteRotationOffset: {x: 0, y: 0, z: 0}
+  _billboard: {fileID: 9056379730203264272}

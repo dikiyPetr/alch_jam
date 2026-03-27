@@ -7,9 +7,7 @@ public class ArrowProjectile : MonoBehaviour
 {
     float _speed;
     [SerializeField] float _arrivalRadius = 0.4f;
-    // Дочерний объект со спрайтом — поворачивается в сторону цели
-    [SerializeField] Transform _sprite;
-    [SerializeField] Vector3 _spriteRotationOffset;
+    [SerializeField] BillboardSprite _billboard;
 
     public Transform Target { get; private set; }
 
@@ -43,9 +41,8 @@ public class ArrowProjectile : MonoBehaviour
     }
 
     void OrientSprite(Vector3 dir)
-    {   
-        if (_sprite == null || dir == Vector3.zero) return;
-        _sprite.rotation = Quaternion.LookRotation(dir, Vector3.up) * Quaternion.Euler(_spriteRotationOffset);
+    {
+        _billboard?.SetDirection(dir);
     }
 
     void Hit()
