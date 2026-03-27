@@ -1,50 +1,116 @@
-﻿using UnityEngine;
+using System;
+using UnityEngine;
 
+// Воспроизводит SpriteAnimClip, сдвигая UV спрайтлиста через MaterialPropertyBlock.
+// Play(name/clip) — переключить клип.
+// OnEventFrame(clip, localFrame) — событие на кадрах из clip.eventFrames.
+// OnClipEnd(clip) — конец не-looping клипа (остаётся на последнем кадре).
 [RequireComponent(typeof(MeshRenderer))]
 public class BillboardAnimator : MonoBehaviour
 {
-    [Header("Spritesheet")] public int cols = 9;
-    public int rows = 1;
-    public float fps = 8f;
+    [Header("Spritesheet")]
+    [SerializeField] int _cols = 9;
+    [SerializeField] int _rows = 1;
 
-    [Header("Animation range")] public int startFrame = 0;
-    public int endFrame = -1;
+    [Header("Clips")]
+    [SerializeField] SpriteAnimClip[] _clips;
+    [SerializeField] SpriteAnimClip _defaultClip;
 
     MeshRenderer _rend;
     MaterialPropertyBlock _block;
-    static readonly int _stID = Shader.PropertyToID("_BaseMap_ST");
+    static readonly int StID = Shader.PropertyToID("_BaseMap_ST");
 
+    SpriteAnimClip _current;
+    int _localFrame;
     float _timer;
-    int _frame;
+
+    public SpriteAnimClip CurrentClip => _current;
+
+    // clip — текущий клип, localFrame — локальный индекс (0 = первый кадр клипа)
+    public event Action<SpriteAnimClip, int> OnEventFrame;
+    public event Action<SpriteAnimClip> OnClipEnd;
 
     void Awake()
     {
         _rend = GetComponent<MeshRenderer>();
         _block = new MaterialPropertyBlock();
-        if (endFrame < 0) endFrame = cols * rows - 1;
+    }
+
+    void Start()
+    {
+        if (_defaultClip != null) Play(_defaultClip);
+    }
+
+    public void Play(string clipName, bool forceRestart = false)
+    {
+        foreach (var clip in _clips)
+        {
+            if (clip != null && clip.name == clipName)
+            {
+                Play(clip, forceRestart);
+                return;
+            }   
+        }
+        Debug.LogWarning($"[BillboardAnimator] Clip '{clipName}' not found on {name}");
+    }
+
+    public void Play(SpriteAnimClip clip, bool forceRestart = false)
+    {
+        if (clip == null || (_current == clip && !forceRestart)) return;
+        _current = clip;
+        _localFrame = 0;
+        _timer = 0f;
+        ApplyFrame(0);
     }
 
     void Update()
     {
+        if (_current == null) return;
+
         _timer += Time.deltaTime;
-        if (_timer < 1f / fps) return;
-        _timer = 0f;
+        float frameTime = 1f / _current.fps;
+        if (_timer < frameTime) return;
+        _timer -= frameTime;
 
-        _frame++;
-        if (_frame > endFrame) _frame = startFrame;
+        int clipLength = _current.endFrame - _current.startFrame + 1;
+        int next = _localFrame + 1;
 
-        ApplyFrame(_frame);
+        if (next >= clipLength)
+        {
+            if (_current.loop)
+                _localFrame = 0;
+            else
+            {
+                OnClipEnd?.Invoke(_current);
+                return; // остаётся на последнем кадре
+            }
+        }
+        else
+        {
+            _localFrame = next;
+        }
+
+        ApplyFrame(_localFrame);
+        FireEventIfNeeded(_localFrame);
     }
 
-    void ApplyFrame(int f)
+    void FireEventIfNeeded(int localFrame)
     {
-        float scaleX = 1f / cols;
-        float scaleY = 1f / rows;
-        float offsetX = (f % cols) * scaleX;
-        float offsetY = (rows - 1 - f / cols) * scaleY; 
+        if (_current.eventFrames == null) return;
+        foreach (var ef in _current.eventFrames)
+            if (ef == localFrame) { OnEventFrame?.Invoke(_current, localFrame); return; }
+    }
+
+    void ApplyFrame(int localFrame)
+    {
+        int g = _current.startFrame + localFrame;
+        float sx = 1f / _cols;
+        float sy = 1f / _rows;
+        float ox = (g % _cols) * sx;
+        float oy = (_rows - 1 - g / _cols) * sy;
 
         _rend.GetPropertyBlock(_block);
-        _block.SetVector(_stID, new Vector4(scaleX, scaleY, offsetX, offsetY));
+        _block.SetVector(StID, new Vector4(sx, sy, ox, oy));
         _rend.SetPropertyBlock(_block);
     }
 }

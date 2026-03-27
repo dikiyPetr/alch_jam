@@ -21,11 +21,12 @@ public class MeteorAreaDamage : AreaDamageMono
 
     public event Action<float> OnDamageDealt;
 
-    public void Launch(Vector3 targetPos)
+    // skipWarning=true — пропустить фазу предупреждения (если наводка уже показана снаружи).
+    public void Launch(Vector3 targetPos, bool skipWarning = false)
     {
         transform.position = targetPos;
         SetDamageZoneActive(false);
-        StartCoroutine(FullSequence());
+        StartCoroutine(skipWarning ? SkipWarningSequence() : FullSequence());
     }
 
     IEnumerator FullSequence()
@@ -33,6 +34,13 @@ public class MeteorAreaDamage : AreaDamageMono
         _warningVisual?.StartVisual(_warningDuration);
         _meteorVisual?.StartVisual(_fallDuration);
         yield return new WaitForSeconds(Mathf.Max(_warningDuration, _fallDuration));
+        yield return ImpactPhase();
+    }
+
+    IEnumerator SkipWarningSequence()
+    {
+        _meteorVisual?.StartVisual(_fallDuration);
+        yield return new WaitForSeconds(_fallDuration);
         yield return ImpactPhase();
     }
 

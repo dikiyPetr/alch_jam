@@ -9,7 +9,7 @@ public abstract class AiController : MonoBehaviour
 
   public UnitMono Unit => _unit;
 
-  protected void Awake()
+  protected virtual void Awake()
   {
     _stateMachine.AddState(new IdleState(this, _stateMachine));
 

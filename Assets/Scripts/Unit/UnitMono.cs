@@ -81,7 +81,7 @@ public abstract class UnitMono : MonoBehaviour
     public void SetLinearDrag(float drag) => _rb.linearDamping = drag;
     public float GetLinearDrag() => _rb.linearDamping;
 
-    protected void StopMovement()
+    public void StopMovement()
     {
         if (moveMode == MoveMode.Navigation && _agent != null && _agent.enabled)
             _agent.ResetPath();

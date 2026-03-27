@@ -266,11 +266,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa97cd478e0543cdbd4a6fcec30c419b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BillboardAnimator
-  cols: 9
-  rows: 1
-  fps: 8
-  startFrame: 0
-  endFrame: -1
+  _cols: 9
+  _rows: 1
+  _clips:
+  - {fileID: 11400000, guid: 45d0341460374b744bb33b7f02ade660, type: 2}
+  _defaultClip: {fileID: 11400000, guid: 45d0341460374b744bb33b7f02ade660, type: 2}
 --- !u!114 &6924696557857230612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -351,11 +351,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cad29896ff744c0d86de2861997df829, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlimeAreaDamageMono
+  _rangeFinder: {fileID: 0}
   _targetLayers:
     serializedVersion: 2
     m_Bits: 256
   _tickRate: 1
-  _collider: {fileID: 4658496595985593184}
   _slime: {fileID: 0}
 --- !u!1 &7134748139754257260
 GameObject:

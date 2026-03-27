@@ -1,20 +1,24 @@
-﻿public abstract class State
+public abstract class State
 {
-  protected readonly AiController aiController;
-  protected readonly StateMachine stateMachine;
+    protected readonly AiController aiController;
+    protected readonly StateMachine stateMachine;
 
-  protected State(AiController aiController, StateMachine stateMachine)
-  {
-    this.aiController = aiController;
-    this.stateMachine = stateMachine;
-  }
+    protected State(AiController aiController, StateMachine stateMachine)
+    {
+        this.aiController = aiController;
+        this.stateMachine = stateMachine;
+    }
 
-  protected void ChangeState<T>() where T : State
-  {
-    stateMachine.ChangeState<T>();
-  }
+    protected void ChangeState<T>() where T : State
+    {
+        stateMachine.ChangeState<T>();
+    }
 
-  public virtual void Enter() {}
-  public virtual void Exit() {}
-  public virtual void Update() {}
+    // Задержка перед фактическим переходом (в секундах).
+    // Переопределяй в стейте чтобы добавить паузу при выходе.
+    public virtual float ExitDelay => 0f;
+
+    public virtual void Enter() {}
+    public virtual void Exit() {}
+    public virtual void Update() {}
 }
